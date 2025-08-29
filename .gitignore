@@ -1,24 +1,16 @@
-# Compiled class file
+# ❌ Nunca incluir la configuración global del workspace de Eclipse
+.metadata/
+
+# 🛠️ Archivos generados por la compilación de Eclipse
+bin/
 *.class
 
-# Log file
+# 🗒️ Archivos temporales y de log
 *.log
+*.tmp
+*.swp
+*~
 
-# BlueJ files
-*.ctxt
-
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
-
-# Package Files #
-*.jar
-*.war
-*.nar
-*.ear
-*.zip
-*.tar.gz
-*.rar
-
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
-replay_pid*
+# 🖥️ Archivos del sistema (Mac y Windows)
+.DS_Store
+Thumbs.db
