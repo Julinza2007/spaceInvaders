@@ -3,13 +3,16 @@ package GUI;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 public class spaceInvaders extends JFrame {
-	
+
+	static ArrayList<Enemigo> enemigos = new ArrayList<>();
+
 	private int anchoPanel=0;
 	private boolean aPressed = false;
 	private boolean dPressed = false;
@@ -42,6 +45,7 @@ public class spaceInvaders extends JFrame {
 		player.setBackground(Color.GREEN);
 		contentPane.add(player);
 		
+		int delay = 0;
 		
 		for (int parte : panel_partes) {
 			Enemigo enemigo = new Enemigo (nave_enemiga);
@@ -50,7 +54,13 @@ public class spaceInvaders extends JFrame {
 			contentPane.add(enemigo);
 			enemigo.repaint();
 			System.out.println(nave_enemiga.getImage());
+			delay += 200; // aumenta el delay entre enemigos en 200
+			enemigo.movimiento(83, 73, contentPane.getWidth(), delay);
+			Enemigo.enemigos.add(enemigo);
 		}
+		
+
+		
 		addKeyListener(new KeyListener() {
 			
 		    public void keyTyped(KeyEvent e) {} // Se abre el listener para poder escuchar input del teclado en el juego.
