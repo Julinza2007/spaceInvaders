@@ -23,8 +23,9 @@
 			private Image fondoMenu;
 			private panelInicio panelInicio;
 			private Font fuenteSAO;
-			private boolean mostrarTexto = true; // booleano para la animacion parpadeante del texto para empezar a jugar.
-			private Clip clip;
+			private boolean mostrarTexto = true; // Booleano para la animacion parpadeante del texto para empezar a jugar.
+			private Clip musicaMenu;
+			private Clip sonidoInicio;
 			
 			public menuInicio() {
 				 setTitle("Space Invaders G3L");
@@ -34,10 +35,10 @@
 			        
 			        try { // Es una promesa, que si no se cumple, o sea no carga la fuente, que use de manera forzada la default que es ARIAL.
 			            
-			        	fuenteSAO = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/GUI/SAO.ttf"));
+			        	fuenteSAO = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/fuentes/SAO.ttf"));
 			        	
 			        } 
-			        catch (Exception e) {
+			        catch (Exception e) { // Si no se cumple la promesa, entra al catch y se usa por default ARIAL.
 			            e.printStackTrace();
 			            fuenteSAO = new Font("Arial", Font.BOLD, 48);
 			        }
@@ -45,12 +46,12 @@
 			        panelInicio = new panelInicio();
 			        setContentPane(panelInicio);
 		
-			        addKeyListener(this);
-			        setFocusable(true);
+			        addKeyListener(this); // Se abre el listener para escuchar los eventos del teclado.
+			        setFocusable(true); // Se hace focus en la ventana del menú.
 		
-			        fondoMenu = new ImageIcon(getClass().getResource("/GUI/menuInicio.png")).getImage(); // carga la imagen del fondo
+			        fondoMenu = new ImageIcon(getClass().getResource("/img/menuInicio.png")).getImage(); // Se carga la imagen del fondo
 	
-			        Timer timer = new Timer(1200, e -> { // se utiliza el timer para hacer la animación de parpadeo que dura 1,2 segundos.
+			        Timer timer = new Timer(1200, e -> { // Se utiliza el timer para hacer la animación de parpadeo que dura 1,2 segundos.
 			            mostrarTexto = !mostrarTexto;
 			            repaint();
 			        });
@@ -59,11 +60,22 @@
 			        try {
 			            // Cargar el archivo .wav desde la carpeta GUI
 			            AudioInputStream audioIn = AudioSystem.getAudioInputStream(
-			                getClass().getResource("/GUI/spaceTravel.wav"));
-			            	clip = AudioSystem.getClip();  // crear Clip
-			            	clip.open(audioIn);             // abrir audio
-			            	clip.loop(Clip.LOOP_CONTINUOUSLY); // reproducir en loop infinito
+			                getClass().getResource("/sonidos/spaceTravel.wav"));
+			            	musicaMenu = AudioSystem.getClip();  // crear Clip
+			            	musicaMenu.open(audioIn);             // abrir audio
+			            	musicaMenu.loop(Clip.LOOP_CONTINUOUSLY); // reproducir en loop infinito
 			        }
+			        catch (Exception e) {
+			            e.printStackTrace();
+			        }
+			        
+			        try {
+			        	AudioInputStream audioIn = AudioSystem.getAudioInputStream(
+			                    getClass().getResource("/sonidos/empezarJuego1.wav"));
+			            sonidoInicio = AudioSystem.getClip();  // crear Clip
+			            sonidoInicio.open(audioIn);             // abrir audio
+			        }
+			        
 			        catch (Exception e) {
 			            e.printStackTrace();
 			        }
@@ -78,41 +90,42 @@
 		        protected void paintComponent(Graphics g) {
 		            super.paintComponent(g);
 		
-		            // dibujar fondo
-		            g.drawImage(fondoMenu, 0, 0, getWidth(), getHeight(), this);
+		            g.drawImage(fondoMenu, 0, 0, getWidth(), getHeight(), this); // dibujar fondo
 		
 		            if (!startGame) {
 		                g.setColor(Color.ORANGE);
 		                g.setFont(fuenteSAO.deriveFont(Font.BOLD, 70f));
 		                g.drawString("SPACE INVADERS G3L", 207, 150); // este seria el titulo
 		
-		                if (mostrarTexto) { // solo lo dibuja si el flag está en true
+		                if (mostrarTexto) { // solo lo dibuja si el booleano es true
 		                    g.setColor(Color.WHITE);
 		                    g.setFont(fuenteSAO.deriveFont(Font.BOLD, 36f));
 		                    g.drawString("Presiona ENTER para jugar", 265, 300); // mensaje para arrancar el juego
 		                }
 		            } 
-	
-		            else {
-		                // bla bla bla
-		            }
 		        }
 		    }
 		
-		    // eventos de teclado
-		    public void keyPressed(KeyEvent e) {
-		        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+		   
+		    public void keyPressed(KeyEvent e) {  // Se manejan los eventos de teclado
+		        if (e.getKeyCode() == KeyEvent.VK_ENTER) { // Si se presiona la tecla ENTER se inicia el juego.
 		            startGame = true;
 		            
-		            if (clip != null && clip.isRunning()) {
-		                clip.stop(); // detener música
+		            if (musicaMenu != null && musicaMenu.isRunning()) {
+		                musicaMenu.stop(); // Con esto se detiene la música del menú.
 		            }
 		            
-		            this.dispose(); // cierra la ventana del menú
-		            spaceInvaders spaceInvaders = new spaceInvaders(); // crea una nueva instancia de la clase Juego
-		            spaceInvaders.setVisible(true); // muestra la ventana del juego
+		            if (sonidoInicio != null) {
+		                sonidoInicio.setFramePosition(0); // Se reinicia desde el principio el sonido.
+		                sonidoInicio.start();             // Se reproduce el sonido de que arrancó el juego.
+		            }
 		            
-		            repaint(); // repinta todo el panel
+		            
+		            repaint(); // Esto repinta todo el panel para refrescar el contenido de manera dinámica.
+		            
+		            this.dispose(); // Se cierra la ventana del menú.
+		            spaceInvaders spaceInvaders = new spaceInvaders(); // Se crea una nueva instancia de la clase spaceInvaders.
+		            spaceInvaders.setVisible(true); // Se muestra la ventana del juego.		            
 		        }
 		    }
 		
