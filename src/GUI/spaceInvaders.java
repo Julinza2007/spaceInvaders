@@ -10,12 +10,14 @@ public class spaceInvaders extends JFrame {
 
 	public spaceInvaders() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(0, 0, 800, 600);
+		setTitle("Space Invaders");
 		contentPane = new JPanel(null);
 		setResizable(false);
 		setFocusable(true); // Es importante agregar esto para hacer focus en la ventana del juego
 		requestFocusInWindow(); // El teclado hace focus solamente en la ventana del juego.
 
+				
 		
 		setContentPane(contentPane);
 
