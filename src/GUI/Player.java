@@ -67,9 +67,9 @@ public class Player extends JPanel {
 		else {
 			ultimoDisparo = ahora; // Actualizamos el momento del último disparo
 			int disparoX = getX() + getWidth() / 2 - 5;
-			int disparoY = getY() / 2 - 10;
+			int disparoY = getY() - 50;
 
-			Disparo disparo = new Disparo (disparoX, disparoY, 10, 50);
+			Disparo disparo = new Disparo (disparoX, disparoY, 5, 25);
 			disparo.setBackground(Color.RED);
 			panel.add(disparo);
 		

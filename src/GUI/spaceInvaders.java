@@ -26,9 +26,13 @@ public class spaceInvaders extends JFrame {
 		setFocusable(true); // Es importante agregar esto para hacer focus en la ventana del juego
 		requestFocusInWindow(); // El teclado hace focus solamente en la ventana del juego.
 
+		int[] panel_partes = {10, 100, 200, 300, 400, 500, 600, 700};
+		
 		int anchoPanel = contentPane.getWidth();
 		
 		ImageIcon nave = new ImageIcon("src/GUI/nave.png");
+		
+		ImageIcon nave_enemiga = new ImageIcon("src/GUI/nave_enemiga.jpg");
 		
 		setContentPane(contentPane);
 		
@@ -38,6 +42,15 @@ public class spaceInvaders extends JFrame {
 		player.setBackground(Color.GREEN);
 		contentPane.add(player);
 		
+		
+		for (int parte : panel_partes) {
+			Enemigo enemigo = new Enemigo (nave_enemiga);
+			enemigo.setBounds(parte, 50, 83, 73);
+			enemigo.setLocation(parte, 50);
+			contentPane.add(enemigo);
+			enemigo.repaint();
+			System.out.println(nave_enemiga.getImage());
+		}
 		addKeyListener(new KeyListener() {
 			
 		    public void keyTyped(KeyEvent e) {} // Se abre el listener para poder escuchar input del teclado en el juego.
