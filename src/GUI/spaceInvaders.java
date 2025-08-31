@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -19,7 +20,7 @@ public class spaceInvaders extends JFrame {
 
 	public spaceInvaders() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 800, 600);
 		contentPane = new JPanel(null);
 		setResizable(false);
 		setFocusable(true); // Es importante agregar esto para hacer focus en la ventana del juego
@@ -27,10 +28,13 @@ public class spaceInvaders extends JFrame {
 
 		int anchoPanel = contentPane.getWidth();
 		
+		ImageIcon nave = new ImageIcon("src/GUI/nave.png");
+		
 		setContentPane(contentPane);
 		
-		Player player = new Player (360, 470, 80, 10);
-		player.setLocation(164, 240);
+		Player player = new Player (nave);
+		player.setBounds(360, 470, 64, 64);
+		player.setLocation(365, 480);
 		player.setBackground(Color.GREEN);
 		contentPane.add(player);
 		
@@ -58,6 +62,8 @@ public class spaceInvaders extends JFrame {
 		        if (teclaPresionada == KeyEvent.VK_W) { wPressed = false; }
 		    }
 			});
+		
+
 		
 
 

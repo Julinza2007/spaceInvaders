@@ -2,7 +2,9 @@ package GUI;
 
 import java.awt.Color;
 import java.awt.Desktop.Action;
+import java.awt.Graphics;
 
+import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 import java.awt.Color;
@@ -15,11 +17,28 @@ public class Player extends JPanel {
 	
 	private long ultimoDisparo = 0; // Momento en milisegundos del último disparo
 	private int tiempoRecarga = 300; // Tiempo mínimo entre disparos (ms)
+	private ImageIcon naveIcon;
 	
 	public Player(int posX, int posY, int ancho, int alto) {
 		setBounds(posX, posY, ancho, alto);
 	}
 	
+	public Player(ImageIcon nave) {
+		this.naveIcon = nave;
+		setOpaque(false); // esto sirve para que el fondo no tape la imagen
+	}
+	
+	protected void paintComponent (Graphics g) {
+		super.paintComponent(g);	// Limpia el fondo antes de dibujar, util para que no se superpongan dibujos viejos
+		if (naveIcon != null) {
+			g.drawImage(naveIcon.getImage(), 0, 0, getWidth(), getHeight(), this);
+			// naveIcon.getImage(): trae la imagen cruda de la nave
+			// 0, 0: indica la posicion donde se va a dibujar la imagen
+			// getWidth(), getHeight(): escala la imagen segun el tamaño del panel 
+			// this: referencia al componente actual
+		}
+	}
+
 	public void moverDerecha(int anchoPanel) {
 		int posX = getX();
 		int posY = getY();
