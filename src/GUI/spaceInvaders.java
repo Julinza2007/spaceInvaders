@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -11,9 +13,8 @@ import javax.swing.JPanel;
 
 public class spaceInvaders extends JFrame {
 
-	static ArrayList<Enemigo> enemigos = new ArrayList<>();
+	static List<Enemigo> enemigos = new ArrayList<>();
 
-	private int anchoPanel=0;
 	private boolean aPressed = false;
 	private boolean dPressed = false;
 	private boolean wPressed = false;
@@ -28,36 +29,35 @@ public class spaceInvaders extends JFrame {
 		setResizable(false);
 		setFocusable(true); // Es importante agregar esto para hacer focus en la ventana del juego
 		requestFocusInWindow(); // El teclado hace focus solamente en la ventana del juego.
+		
 
-		int[] panel_partes = {10, 100, 200, 300, 400, 500, 600, 700};
-		
-		int anchoPanel = contentPane.getWidth();
-		
 		ImageIcon nave = new ImageIcon("src/GUI/nave.png");
 		
-		ImageIcon nave_enemiga = new ImageIcon("src/GUI/nave_enemiga.jpg");
+//		ImageIcon nave_enemiga = new ImageIcon("src/GUI/nave_enemiga.jpg");
+//		ImageIcon nave_enemiga = new ImageIcon("src/GUI/alien2.png");
 		
 		setContentPane(contentPane);
 		
 		Player player = new Player (nave);
-		player.setBounds(360, 470, 64, 64);
-		player.setLocation(365, 480);
+		player.setBounds(360, 480, 64, 64);
 		player.setBackground(Color.GREEN);
 		contentPane.add(player);
 		
-		int delay = 0;
+		generarEnemigos();
 		
-		for (int parte : panel_partes) {
-			Enemigo enemigo = new Enemigo (nave_enemiga);
-			enemigo.setBounds(parte, 50, 83, 73);
-			enemigo.setLocation(parte, 50);
-			contentPane.add(enemigo);
-			enemigo.repaint();
-			System.out.println(nave_enemiga.getImage());
-			delay += 200; // aumenta el delay entre enemigos en 200
-			enemigo.movimiento(83, 73, contentPane.getWidth(), delay);
-			Enemigo.enemigos.add(enemigo);
-		}
+//		int delay = 0;
+		
+//		for (int parte : panel_partes) {
+//			Enemigo enemigo = new Enemigo (nave_enemiga);
+//			enemigo.setBounds(parte, 50, 45, 35);
+//			enemigo.setLocation(parte, 50);
+//			contentPane.add(enemigo);
+//			enemigo.repaint();
+//			System.out.println(nave_enemiga.getImage());
+//			delay += 200; // aumenta el delay entre enemigos en 200
+//			enemigo.movimiento(83, 73, contentPane.getWidth(), delay);
+//			Enemigo.enemigos.add(enemigo);
+//		}
 		
 
 		
@@ -85,11 +85,43 @@ public class spaceInvaders extends JFrame {
 		        if (teclaPresionada == KeyEvent.VK_W) { wPressed = false; }
 		    }
 			});
-		
-
-		
-
-
 	}
+	
+	public void generarEnemigos() {
+	    int filas = 5;        // cantidad de filas de enemigos
+	    int columnas = 10;    // cantidad de columnas
+	    int inicioX = 50;     // punto inicial en X
+	    int inicioY = 50;     // punto inicial en Y
+	    int espaciadoX = 60;  // separación horizontal
+	    int espaciadoY = 50;  // separación vertical
+
+	    enemigos.clear(); // limpiar por si reiniciamos el juego
+
+	    ImageIcon nave_enemiga = new ImageIcon("src/GUI/alien2.png");
+
+	    int delay = 0; // para que los enemigos arranquen con un desfase
+	    
+	    for (int fila = 0; fila < filas; fila++) {
+	        for (int col = 0; col < columnas; col++) {
+	            int x = inicioX + col * espaciadoX;
+	            int y = inicioY + fila * espaciadoY;
+
+	            // ahora cada enemigo tiene icono
+	            Enemigo enemigo = new Enemigo(x, y, 45, 35, nave_enemiga);
+
+	            contentPane.add(enemigo);   // 👈 agregar al panel
+	            enemigos.add(enemigo);      // guardarlo en la lista
+	            Enemigo.enemigos.add(enemigo); // para que se muevan en bloque
+
+	            enemigo.repaint();
+	            enemigo.movimiento(45, 35, contentPane.getWidth(), delay);
+
+	            delay += 500; // el próximo enemigo arranca después
+	        }
+	    }
+
+	    contentPane.repaint();
+	}
+
 
 }
