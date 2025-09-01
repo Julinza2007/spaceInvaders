@@ -88,8 +88,8 @@ public class spaceInvaders extends JFrame {
 	}
 	
 	public void generarEnemigos() {
-	    int filas = 5;        // cantidad de filas de enemigos
-	    int columnas = 10;    // cantidad de columnas
+	    int filas = 3;        // cantidad de filas de enemigos
+	    int columnas = 5;    // cantidad de columnas
 	    int inicioX = 50;     // punto inicial en X
 	    int inicioY = 50;     // punto inicial en Y
 	    int espaciadoX = 60;  // separación horizontal
@@ -99,9 +99,10 @@ public class spaceInvaders extends JFrame {
 
 	    ImageIcon nave_enemiga = new ImageIcon("src/GUI/alien2.png");
 
-	    int delay = 0; // para que los enemigos arranquen con un desfase
+	    int delay = (filas * columnas) * 1000 ; // para que los enemigos arranquen con un desfase
 	    
 	    for (int fila = 0; fila < filas; fila++) {
+
 	        for (int col = 0; col < columnas; col++) {
 	            int x = inicioX + col * espaciadoX;
 	            int y = inicioY + fila * espaciadoY;
@@ -116,9 +117,11 @@ public class spaceInvaders extends JFrame {
 	            enemigo.repaint();
 	            enemigo.movimiento(45, 35, contentPane.getWidth(), delay);
 
-	            delay += 500; // el próximo enemigo arranca después
+	            delay -= 500; // el próximo enemigo arranca después
 	        }
 	    }
+	    
+	    
 
 	    contentPane.repaint();
 	}

@@ -12,7 +12,7 @@ public class Enemigo extends JPanel {
 	static ArrayList<Enemigo> enemigos = new ArrayList<>();
 	
 	private ImageIcon naveIcon;
-	private boolean hacia_derecha = false;
+	private boolean hacia_derecha = true;
 	
 	public Enemigo(int posX, int posY, int ancho, int alto, ImageIcon nave_enemiga) {
 		setBounds(posX, posY, ancho, alto);
@@ -35,7 +35,7 @@ public class Enemigo extends JPanel {
 			
 
 			
-			int dx = 10;
+			int dx = 60;
 			int dy = 50;
 			
 			try {
@@ -54,29 +54,16 @@ public class Enemigo extends JPanel {
 		    	int maxima_altura = ancho_panel / 2;
 		    	
 		    	
-		    	for (Enemigo enemigo : enemigos) {
-		    		if (enemigo.hacia_derecha && posX >= ancho_panel - ancho ) {
+		    	// Verifica si está por salirse ANTES de mover
+	            if (hacia_derecha && posX + getWidth() >= 700) {
+	                hacia_derecha = false;
+	                posY += dy;
+	            } else if (!hacia_derecha && posX - getWidth() <= 0) {
+	                hacia_derecha = true;
+	                posY += dy;
+	            }
 
-		    			tocaronBorde = true;
-		    		}
-		    		
-		    		else if (!enemigo.hacia_derecha && posX <= 0) {
-
-		    			tocaronBorde = true;
-		    		}
-		    	}
-		    	
-		    	if (tocaronBorde) {
-		    		for (Enemigo enemigo : enemigos) {
-		            enemigo.hacia_derecha = !enemigo.hacia_derecha;
-		                enemigo.setLocation(enemigo.getX(), enemigo.getY() + dy);
-		            }
-		        } else {
-		            for (Enemigo enemigo : enemigos) {
-		                int nuevaX = enemigo.getX() + (enemigo.hacia_derecha ? dx : -dx);
-		                enemigo.setLocation(nuevaX, enemigo.getY());
-		            }
-		        }
+	  
 		    	
 		    	posX += (hacia_derecha ? dx : -dx);	 // si la variable es TRUE utiliza dx. Si la variable es FALSE utiliza -dx 
 		    	

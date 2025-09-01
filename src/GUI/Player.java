@@ -75,7 +75,7 @@ public class Player extends JPanel {
 			// Timer para mover el disparo hacia arriba
 			Timer timer = new Timer(30, new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					int nuevaY = disparo.getY() - 5;
+					int nuevaY = disparo.getY() - 25;
 					if (nuevaY > 0) {
 						disparo.setLocation(disparo.getX(), nuevaY);
 					}
