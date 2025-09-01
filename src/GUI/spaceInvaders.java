@@ -46,6 +46,14 @@ public class spaceInvaders extends JFrame {
 		player.setBackground(Color.GREEN);
 		contentPane.add(player);
 		
+		player.setPlayerListener(new PlayerListener() {
+		    @Override
+		    public void onPlayerEliminado(Player eliminado) {
+		        eliminarPlayer(eliminado);
+		        System.out.println("¡Jugador eliminado!");
+		    }
+		});
+		
 		generarEnemigos();
 		
 //		int delay = 0;
@@ -129,6 +137,16 @@ public class spaceInvaders extends JFrame {
 
 	    contentPane.repaint();
 	}
+	
+	public void eliminarPlayer(Player player) {
+		contentPane.remove(player);
+		contentPane.repaint();
+	}
+	
+	public interface PlayerListener {
+	    void onPlayerEliminado(Player player);
+	}
+
 	
 	
 

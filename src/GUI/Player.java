@@ -6,9 +6,13 @@ import java.awt.Graphics;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+
+import GUI.spaceInvaders.PlayerListener;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Player extends JPanel {
 
@@ -17,6 +21,7 @@ public class Player extends JPanel {
 	private long ultimoDisparo = 0; // Momento en milisegundos del último disparo
 	private int tiempoRecarga = 300; // Tiempo mínimo entre disparos (ms)
 	private ImageIcon naveIcon;
+	private PlayerListener listener;
 	
 	public Player(int posX, int posY, int ancho, int alto) {
 		setBounds(posX, posY, ancho, alto);
@@ -57,6 +62,27 @@ public class Player extends JPanel {
 			setLocation(posX - 15, posY);
 		}
 	}
+	
+	public void setPlayerListener(PlayerListener listener) {
+	    this.listener = listener;
+	    
+
+	}
+	
+	public ArrayList<Enemigo> detectarChoques(List<Enemigo> enemigos) {
+		
+		ArrayList<Enemigo> enemigoChocado = new ArrayList<>();
+		for (Enemigo enemigo : enemigos) {
+			if (this.getBounds().intersects(enemigo.getBounds())) {
+					enemigoChocado.add(enemigo);
+			}
+		}
+		return enemigoChocado;
+	}
+	
+	
+	
+	
 	public void Disparar(JPanel panel) {
 		long ahora = System.currentTimeMillis();
 		if (ahora - ultimoDisparo < tiempoRecarga) {
@@ -89,6 +115,20 @@ public class Player extends JPanel {
 						}
 						spaceInvaders.enemigos.removeAll(colisionados);
 						panel.repaint();
+						
+						ArrayList<Enemigo> choquePlayer = detectarChoques(spaceInvaders.enemigos);
+						if (!choquePlayer.isEmpty() && listener != null) {
+						    listener.onPlayerEliminado(Player.this);
+						}
+
+						
+						/*
+						ArrayList<Enemigo> choquePlayer = detectarChoques(spaceInvaders.enemigos);
+						for (Enemigo enemigo : choquePlayer) {
+							spaceInvaders.eliminarPlayer(this);
+						}
+						*/
+						
 					}
 					else {
 						((Timer) e.getSource()).stop(); // Detiene el timer
