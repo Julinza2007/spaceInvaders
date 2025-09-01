@@ -8,6 +8,7 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class Player extends JPanel {
 
@@ -67,7 +68,7 @@ public class Player extends JPanel {
 			int disparoX = getX() + getWidth() / 2 - 5;
 			int disparoY = getY() - 50;
 
-			Disparo disparo = new Disparo (disparoX, disparoY, 5, 25);
+			Disparo disparo = new Disparo (disparoX, disparoY, 5, 25, panel, spaceInvaders.enemigos);
 			disparo.setBackground(Color.RED);
 			panel.add(disparo);
 		
@@ -78,6 +79,16 @@ public class Player extends JPanel {
 					int nuevaY = disparo.getY() - 25;
 					if (nuevaY > 0) {
 						disparo.setLocation(disparo.getX(), nuevaY);
+						
+						
+						ArrayList<Enemigo> colisionados = disparo.detectarColisiones(spaceInvaders.enemigos);
+						for (Enemigo enemigo : colisionados) {
+							panel.remove(enemigo);
+							colisionados.remove(enemigo);
+							panel.remove(disparo);
+						}
+						spaceInvaders.enemigos.removeAll(colisionados);
+						panel.repaint();
 					}
 					else {
 						((Timer) e.getSource()).stop(); // Detiene el timer
