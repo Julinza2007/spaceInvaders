@@ -2,6 +2,9 @@ package GUI;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class spaceInvaders extends JFrame {
 
@@ -20,7 +23,21 @@ public class spaceInvaders extends JFrame {
 				
 		
 		setContentPane(contentPane);
+		
+		JButton btnGameOver = new JButton("btnGameOver");
+		btnGameOver.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				llamarGameOver();
+			}
+		});
+		btnGameOver.setBounds(187, 243, 169, 23);
+		contentPane.add(btnGameOver);
 
 	}
-
+	
+	public void llamarGameOver() {
+		this.dispose();
+		gameOverPantalla gameOverPantalla = new gameOverPantalla(); // Se crea una nueva instancia de la clase spaceInvaders.
+        gameOverPantalla.setVisible(true);
+	}
 }

@@ -28,7 +28,7 @@
 			private Clip sonidoInicio;
 			
 			public menuInicio() {
-				 setTitle("Space Invaders G3L");
+				    setTitle("Space Invaders G3L");
 			        setBounds(0, 0, 800, 600);
 			        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			        setResizable(false);
