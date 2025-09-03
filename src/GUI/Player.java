@@ -85,6 +85,9 @@ public class Player extends JPanel {
 	
 	
 	public void Disparar(JPanel panel) {
+		if(!isVisible()) {
+			return; // Si el jugador no está visible, no puede disparar
+		}
 		long ahora = System.currentTimeMillis();
 		if (ahora - ultimoDisparo < tiempoRecarga) {
 		    return; // Todavía no pasó el tiempo de recarga

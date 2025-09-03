@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 import javax.swing.JButton;
@@ -24,12 +25,13 @@ public class spaceInvaders extends JFrame {
     private boolean wPressed = false;
     private JPanel contentPane;
     private Timer colisionTimer;
+	private boolean gameOverMostrado = false;
     private static spaceInvaders instance;
 
     public spaceInvaders() {
         instance = this;
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 800, 600);
+        setBounds(0, 0, 800, 600);
         setTitle("Space Invaders");
         contentPane = new JPanel(null);
         setResizable(false);
@@ -42,6 +44,7 @@ public class spaceInvaders extends JFrame {
         // Configurar puntaje en pantalla
         puntaje.setBounds(10, 10, 200, 30);
         contentPane.add(puntaje);
+        contentPane.setComponentZOrder(puntaje, 0); // Asegura que el puntaje esté al frente
 
         // Botón provisorio Game Over
         JButton btnGameOver = new JButton("btnGameOver");
@@ -58,7 +61,11 @@ public class spaceInvaders extends JFrame {
         player.setBounds(360, 480, 64, 64);
         player.setBackground(Color.GREEN);
         contentPane.add(player);
-
+        
+        if (contentPane.isAncestorOf(player)) {
+            contentPane.setComponentZOrder(player, 1);
+        }
+        
         player.setPlayerListener(new PlayerListener() {
             @Override
             public void onPlayerEliminado(Player eliminado) {
@@ -112,8 +119,10 @@ public class spaceInvaders extends JFrame {
         enemigos.clear();
         ImageIcon nave_enemiga = new ImageIcon("src/img/alien2.png");
 
-        int delay = (filas * columnas) * 1000; // 👈 delay progresivo
+//        int delay = (filas * columnas) * 1000; // 👈 delay progresivo
 
+//        int delay = 0;
+        
         for (int fila = 0; fila < filas; fila++) {
             for (int col = 0; col < columnas; col++) {
                 int x = inicioX + col * espaciadoX;
@@ -121,13 +130,13 @@ public class spaceInvaders extends JFrame {
 
                 Enemigo enemigo = new Enemigo(x, y, 45, 35, nave_enemiga);
                 contentPane.add(enemigo);
+                contentPane.setComponentZOrder(enemigo, 2);
                 enemigos.add(enemigo);
                 Enemigo.enemigos.add(enemigo);
 
                 enemigo.repaint();
-                enemigo.movimiento(45, 35, contentPane.getWidth(), delay);
+                enemigo.movimiento(45, 35, contentPane.getWidth(), 1500);
 
-                delay -= 500;
             }
         }
         contentPane.repaint();
@@ -143,6 +152,14 @@ public class spaceInvaders extends JFrame {
 
         player.limpiarBalas(contentPane);
 
+        if (!contentPane.isAncestorOf(player)) {
+			contentPane.add(player);
+		}
+        
+		 if (contentPane.isAncestorOf(player)) {
+			 contentPane.setComponentZOrder(player, 1);
+		 }
+        
         player.setLocation(360, 480);
         player.setVisible(true);
 
@@ -163,22 +180,55 @@ public class spaceInvaders extends JFrame {
 
     private void chequearColisiones() {
         for (int i = 0; i < enemigos.size(); i++) {
-            Enemigo enemigo = enemigos.get(i);
+        	if (contentPane.isAncestorOf(player)) {
+        	    contentPane.setComponentZOrder(player, 1);
+        	}
+        		Enemigo enemigo = enemigos.get(i);
             if (enemigo.isVisible() && colisiona(player, enemigo)) {
-                puntaje.perderVida();
+            	colisionTimer.stop();
+            	puntaje.perderVida();
+
+            	JLabel explosion = new JLabel(new ImageIcon("src/img/explosionJugador.gif"));
+            	explosion.setBounds(player.getX(), player.getY(), player.getWidth(), player.getHeight());
+            	contentPane.add(explosion);
+            	
+            	
+            	if (contentPane.isAncestorOf(explosion)) {
+            	    contentPane.setComponentZOrder(explosion, 0);
+            	}
+            	
+            	contentPane.repaint();
+            	player.setVisible(false);
+
+            	enemigo = enemigos.get(i);
+            	enemigo.setVisible(false);
+            	contentPane.remove(enemigo);
+            	enemigos.remove(i);
+            	i--;
+
+            	Timer timerExplosion = new Timer(2000, e2 -> {
+            	    contentPane.remove(explosion);
+            	    contentPane.repaint();
+
+            	    if (puntaje.getVidas() == 0 && !gameOverMostrado) {
+            	        gameOverMostrado = true;
+            	        colisionTimer.stop();
+            	        llamarGameOver();
+            	    } else {
+            	        reiniciarNivel();
+            	    }
+            	});
+            	timerExplosion.setRepeats(false);
+            	timerExplosion.start();
+                
+                
                 enemigo.setVisible(false);
                 contentPane.remove(enemigo);
                 enemigos.remove(i);
                 i--;
 
-                reiniciarNivel();
                 contentPane.repaint();
 
-                if (puntaje.getVidas() == 0) {
-                    eliminarPlayer(player);
-                    colisionTimer.stop();
-                    llamarGameOver();
-                }
                 break;
             }
         }
