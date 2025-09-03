@@ -38,7 +38,7 @@ public class spaceInvaders extends JFrame {
 		setFocusable(true); // Es importante agregar esto para hacer focus en la ventana del juego
 		requestFocusInWindow(); // El teclado hace focus solamente en la ventana del juego.
 
-		ImageIcon nave = new ImageIcon("src/GUI/nave.png");
+		ImageIcon nave = new ImageIcon("src/img/nave.png");
 		
 		setContentPane(contentPane);
 
@@ -175,15 +175,16 @@ public class spaceInvaders extends JFrame {
 		    
 	
 	public void eliminarPlayer(Player player) {
-		llamarGameOver();
 		contentPane.remove(player);
 		contentPane.repaint();
+		llamarGameOver();
 	}
 	
 
 	public void llamarGameOver() {
-		this.dispose();
 		gameOverPantalla gameOverPantalla = new gameOverPantalla(); // Se crea una nueva instancia de la clase spaceInvaders.
         gameOverPantalla.setVisible(true);
+        this.dispose();
+
 	}
 }
