@@ -107,12 +107,18 @@ public class Player extends JPanel {
 						disparo.setLocation(disparo.getX(), nuevaY);
 						
 						
+						ArrayList<Enemigo> aEliminar = new ArrayList<>();
 						ArrayList<Enemigo> colisionados = disparo.detectarColisiones(spaceInvaders.enemigos);
 						for (Enemigo enemigo : colisionados) {
 							panel.remove(enemigo);
-							colisionados.remove(enemigo);
+							aEliminar.add(enemigo);
 							panel.remove(disparo);
 						}
+						colisionados.removeAll(aEliminar);
+						panel.repaint();
+						
+						
+						
 						spaceInvaders.enemigos.removeAll(colisionados);
 						panel.repaint();
 						

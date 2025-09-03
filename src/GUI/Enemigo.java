@@ -67,7 +67,7 @@ public class Enemigo extends JPanel {
 		    	
 		    	posX += (hacia_derecha ? dx : -dx);	 // si la variable es TRUE utiliza dx. Si la variable es FALSE utiliza -dx 
 		    	
-		    	System.out.println("Enemigo en X: " + posX + " | Dirección: " + (hacia_derecha ? "Derecha" : "Izquierda"));
+//		    	System.out.println("Enemigo en X: " + posX + " | Dirección: " + (hacia_derecha ? "Derecha" : "Izquierda"));
 
 		    	
 
@@ -83,7 +83,7 @@ public class Enemigo extends JPanel {
 	            repaint(); // fuerza el redibujado
 		    	
 		        try {
-		            Thread.sleep(500); // Suspende el hilo por 30 ms, esta es la pausa entre cada iteración del bucle.
+		            Thread.sleep(250); // Suspende el hilo por 30 ms, esta es la pausa entre cada iteración del bucle.
 		        } catch (InterruptedException e) {	// Sucede si otro hilo interrumpe este hilo
 		            Thread.currentThread().interrupt();	// Marca el hilo como interrumpido
 		        }
