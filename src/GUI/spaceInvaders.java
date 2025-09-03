@@ -94,6 +94,8 @@ public class spaceInvaders extends JFrame {
         enemigos.clear(); // limpiar por si reiniciamos el juego
 
         ImageIcon nave_enemiga = new ImageIcon("src/GUI/alien2.png");
+        ImageIcon nave_kamikaze = new ImageIcon("src/GUI/nave_kamikaze.png");
+        ImageIcon nave_disparadora = new ImageIcon("src/GUI/ship2.png");
 
         int delay = (filas * columnas) * 1000 ; // para que los enemigos arranquen con un desfase
         
@@ -107,22 +109,52 @@ public class spaceInvaders extends JFrame {
                 
                 int tipo = random.nextInt(3) + 1; // Se genera un numero de 1 a 3. 
                 // 1 Es el kamikaze
+                if (tipo == 1) {
+                	Enemigo enemigo = new Enemigo(x, y, 45, 35, nave_kamikaze, tipo, player, contentPane);
+                	contentPane.add(enemigo);   //  agregar al panel
+                    enemigos.add(enemigo);      // guardarlo en la lista
+                    Enemigo.enemigos.add(enemigo); // para que se muevan en bloque
+
+
+                    
+                    
+                    
+                    enemigo.repaint();
+                    enemigo.movimiento(45, 35, contentPane.getWidth(), delay);
+                }
                 // 2 Es el disparador
+                if (tipo == 2) {
+                	Enemigo enemigo = new Enemigo(x, y, 45, 35, nave_disparadora, tipo, player, contentPane);
+                	contentPane.add(enemigo);   //  agregar al panel
+                    enemigos.add(enemigo);      // guardarlo en la lista
+                    Enemigo.enemigos.add(enemigo); // para que se muevan en bloque
+
+
+                    
+                    
+                    
+                    enemigo.repaint();
+                    enemigo.movimiento(45, 35, contentPane.getWidth(), delay);
+                }
                 // 3 Es el normal
+                if (tipo == 3) {
+                	Enemigo enemigo = new Enemigo(x, y, 45, 35, nave_enemiga, tipo, player, contentPane);
+                	contentPane.add(enemigo);   //  agregar al panel
+                    enemigos.add(enemigo);      // guardarlo en la lista
+                    Enemigo.enemigos.add(enemigo); // para que se muevan en bloque
 
+
+                    
+                    
+                    
+                    enemigo.repaint();
+                    enemigo.movimiento(45, 35, contentPane.getWidth(), delay);
+                }
+                
                 // ahora cada enemigo tiene icono
-                Enemigo enemigo = new Enemigo(x, y, 45, 35, nave_enemiga, tipo);
-
-                contentPane.add(enemigo);   //  agregar al panel
-                enemigos.add(enemigo);      // guardarlo en la lista
-                Enemigo.enemigos.add(enemigo); // para que se muevan en bloque
 
 
                 
-                
-                
-                enemigo.repaint();
-//              enemigo.movimiento(45, 35, contentPane.getWidth(), delay);
                 
 
                 delay -= 500; // el próximo enemigo arranca después
