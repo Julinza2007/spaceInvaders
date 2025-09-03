@@ -22,8 +22,10 @@ public class spaceInvaders extends JFrame {
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
     private Timer colisionTimer;
+    private static spaceInvaders instance;
 
     public spaceInvaders() {
+    	instance = this;
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 800, 600);
         contentPane = new JPanel(null);
@@ -83,6 +85,10 @@ public class spaceInvaders extends JFrame {
         });
     }
     
+    public static spaceInvaders getInstance() {
+        return instance;
+    }
+    
     public void generarEnemigos() {
         int filas = 3;        // cantidad de filas de enemigos
         int columnas = 5;    // cantidad de columnas
@@ -113,7 +119,7 @@ public class spaceInvaders extends JFrame {
                 enemigo.repaint();
                 enemigo.movimiento(45, 35, contentPane.getWidth(), delay);
 
-                delay -= 500; // el próximo enemigo arranca después
+                 // el próximo enemigo arranca después
             }
         }
         

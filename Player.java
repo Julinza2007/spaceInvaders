@@ -111,20 +111,26 @@ public class Player extends JPanel {
 						
 						ArrayList<Enemigo> aEliminar = new ArrayList<>();
 						ArrayList<Enemigo> colisionados = disparo.detectarColisiones(spaceInvaders.enemigos);
-						for (Enemigo enemigo : colisionados) {
-							panel.remove(enemigo);
-							aEliminar.add(enemigo);
-//
+						
+						 if (!colisionados.isEmpty() && disparo.isVisible()) {
+							 for (Enemigo enemigo : colisionados) {
+								 if(enemigo.isVisible()) {
+									spaceInvaders.getInstance().sumarPuntos();
+									enemigo.setVisible(false);
+									panel.remove(enemigo);
+									spaceInvaders.enemigos.remove(enemigo);
+									aEliminar.add(enemigo);
+								 }
+				            }
+							disparo.setVisible(false);
 							panel.remove(disparo);
 							disparos.remove(disparo); // se elimina el disparo de la lista cuando colisiona
+							((Timer) e.getSource()).stop(); // Detener el timer del disparo
+							
 						}
 						colisionados.removeAll(aEliminar);
 						panel.repaint();
 						
-						
-						
-						spaceInvaders.enemigos.removeAll(colisionados);
-						panel.repaint();
 						
 						ArrayList<Enemigo> choquePlayer = detectarChoques(spaceInvaders.enemigos);
 						if (!choquePlayer.isEmpty() && listener != null) {
