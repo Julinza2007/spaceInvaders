@@ -103,7 +103,7 @@ public class Enemigo extends JPanel {
 		    	
 		    	int maxima_altura = ancho_panel / 2;
 		    	
-		    	if (tipo == 2 && !disparando && getY() >= 300) {
+		    	if (tipo == 2 && !disparando && getY() <= 300) {
 		    	    disparando = true;
 		    	    new Timer(2000, e -> disparar()).start();
 		    	}
@@ -118,8 +118,8 @@ public class Enemigo extends JPanel {
 			    		
 		    	    	
 			    		
-			    		int dirY = (playerY > posY) ? 5 : -5;
-			    		int dirX = (playerX > posX) ? 5 : -5;
+			    		int dirY = (playerY > posY) ? 25 : -25;
+			    		int dirX = (playerX > posX) ? 25 : -25;
 			    		
 			    		posX += dirX;
 			    		posY += dirY;

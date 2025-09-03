@@ -1,6 +1,7 @@
 package GUI;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
@@ -188,8 +189,32 @@ public class spaceInvaders extends JFrame {
                 break;
             }
         }
+        // Colisión con disparos enemigos
+        for (Component comp : contentPane.getComponents()) {
+            if (comp instanceof DisparoEnemigo) {
+                DisparoEnemigo disparo = (DisparoEnemigo) comp;
+                if (colisiona_disparo(player, disparo)) {
+                    puntaje.perderVida();
+                    contentPane.remove(disparo);
+                    contentPane.repaint();
+
+                    if (puntaje.getVidas() == 0) {
+                        eliminarPlayer(player);
+                        colisionTimer.stop();
+                    }
+                    break;
+                }
+            }
+        }
     }
 
+    private boolean colisiona_disparo(Player p, DisparoEnemigo d) {
+        return p.getX() < d.getX() + d.getWidth() &&
+               p.getX() + p.getWidth() > d.getX() &&
+               p.getY() < d.getY() + d.getHeight() &&
+               p.getY() + p.getHeight() > d.getY();
+    }
+    
     private boolean colisiona(Player p, Enemigo e) {
         return p.getX() < e.getX() + e.getWidth() &&
                p.getX() + p.getWidth() > e.getX() &&

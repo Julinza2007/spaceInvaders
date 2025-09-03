@@ -17,20 +17,12 @@ public class DisparoEnemigo extends JPanel{
 	
 	
 	public void mover() {
-		int dy = 5;
+		int dy = 10;
 		new Thread(() -> {
-            while (getY() > 600) {
+            while (isVisible()) {
                 setLocation(getX(), getY() + dy);
                 try { Thread.sleep(30); } catch (InterruptedException e) {}
                 
-                long ahora = System.currentTimeMillis();
-        		if (ahora - ultimoDisparo < tiempoRecarga) {
-        		    return; // Todavía no pasó el tiempo de recarga
-        		}
-        		
-        		else {
-        			ultimoDisparo = ahora; // Actualizamos el momento del último disparo
-        		}
                 
             }
             setVisible(false);
