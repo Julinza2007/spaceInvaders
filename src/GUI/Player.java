@@ -108,11 +108,22 @@ public class Player extends JPanel {
 						
 						
 						ArrayList<Enemigo> colisionados = disparo.detectarColisiones(spaceInvaders.enemigos);
-						for (Enemigo enemigo : colisionados) {
-							panel.remove(enemigo);
-							colisionados.remove(enemigo);
-							panel.remove(disparo);
-						}
+						if (!colisionados.isEmpty()) {
+			                // Eliminar solo el primer enemigo colisionado
+			                Enemigo enemigo = colisionados.get(0);
+			                panel.remove(enemigo);
+			                spaceInvaders.enemigos.remove(enemigo);
+
+			                // Eliminar el disparo y detener el timer
+			                ((Timer) e.getSource()).stop();
+			                panel.remove(disparo);
+			                panel.repaint();
+			                return; // Salimos del método para evitar seguir moviendo el disparo
+			            }
+
+						
+						
+						
 						spaceInvaders.enemigos.removeAll(colisionados);
 						panel.repaint();
 						
