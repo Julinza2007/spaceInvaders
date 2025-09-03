@@ -102,16 +102,28 @@ public class spaceInvaders extends JFrame {
             for (int col = 0; col < columnas; col++) {
                 int x = inicioX + col * espaciadoX;
                 int y = inicioY + fila * espaciadoY;
+                
+                Random random = new Random(); 
+                
+                int tipo = random.nextInt(3) + 1; // Se genera un numero de 1 a 3. 
+                // 1 Es el kamikaze
+                // 2 Es el disparador
+                // 3 Es el normal
 
                 // ahora cada enemigo tiene icono
-                Enemigo enemigo = new Enemigo(x, y, 45, 35, nave_enemiga);
+                Enemigo enemigo = new Enemigo(x, y, 45, 35, nave_enemiga, tipo);
 
                 contentPane.add(enemigo);   //  agregar al panel
                 enemigos.add(enemigo);      // guardarlo en la lista
                 Enemigo.enemigos.add(enemigo); // para que se muevan en bloque
 
+
+                
+                
+                
                 enemigo.repaint();
-                enemigo.movimiento(45, 35, contentPane.getWidth(), delay);
+//              enemigo.movimiento(45, 35, contentPane.getWidth(), delay);
+                
 
                 delay -= 500; // el próximo enemigo arranca después
             }
