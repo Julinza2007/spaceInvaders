@@ -10,6 +10,9 @@ import java.util.Random;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class spaceInvaders extends JFrame {
 
@@ -24,94 +27,106 @@ public class spaceInvaders extends JFrame {
 
 	public spaceInvaders() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 800, 600);
+		setBounds(0, 0, 800, 600);
+		setTitle("Space Invaders");
 		contentPane = new JPanel(null);
 		setResizable(false);
 		setFocusable(true); // Es importante agregar esto para hacer focus en la ventana del juego
 		requestFocusInWindow(); // El teclado hace focus solamente en la ventana del juego.
-		
-		
+
 		ImageIcon nave = new ImageIcon("src/GUI/nave.png");
-		
 		
 		setContentPane(contentPane);
 		
+		JButton btnGameOver = new JButton("btnGameOver");
 		
-		Player player = new Player (nave);
-		player.setBounds(360, 480, 64, 64);
-		player.setBackground(Color.GREEN);
-		contentPane.add(player);
-		
-		player.setPlayerListener(new PlayerListener() {
-		    @Override
-		    public void onPlayerEliminado(Player eliminado) {
-		        eliminarPlayer(eliminado);
-		        System.out.println("¡Jugador eliminado!");
-		    }
-		});
-		
-		generarEnemigos();
-		
-		addKeyListener(new KeyListener() {
-			
-		    public void keyTyped(KeyEvent e) {} // Se abre el listener para poder escuchar input del teclado en el juego.
-
-		    public void keyPressed(KeyEvent e) {
-		        int teclaPresionada = e.getKeyCode();
-		        
-		        if (teclaPresionada == KeyEvent.VK_A) { aPressed = true; }      // Actualiza los booleanos de las teclas cuando están presionadas.
-		        if (teclaPresionada == KeyEvent.VK_D) { dPressed = true; }
-		        if (teclaPresionada == KeyEvent.VK_W) { wPressed = true; }
-
-		        if (aPressed) { player.moverIzquierda(); }
-		        if (dPressed) { player.moverDerecha(contentPane.getWidth()); }
-		        if (wPressed) { player.Disparar(contentPane); }
-		    }
-
-		    @Override
-		    public void keyReleased(KeyEvent e) {
-		        int teclaPresionada = e.getKeyCode();
-		        if (teclaPresionada == KeyEvent.VK_A) { aPressed = false; }     // Actualiza los booleanos cuando una tecla es soltada.
-		        if (teclaPresionada == KeyEvent.VK_D) { dPressed = false; }
-		        if (teclaPresionada == KeyEvent.VK_W) { wPressed = false; }
-		    }
+			btnGameOver.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					llamarGameOver();
+				}
 			});
 		
-	}
+			btnGameOver.setBounds(187, 243, 169, 23);
+			contentPane.add(btnGameOver);
+		
+		
+		
+			Player player = new Player (nave);
+			player.setBounds(360, 480, 64, 64);
+			player.setBackground(Color.GREEN);
+			contentPane.add(player);
+		
+			player.setPlayerListener(new PlayerListener() {
+				@Override
+				public void onPlayerEliminado(Player eliminado) {
+					eliminarPlayer(eliminado);
+					System.out.println("¡Jugador eliminado!");
+				}
+			});
+		
+			generarEnemigos();
+			
+			addKeyListener(new KeyListener() {
+				
+			    public void keyTyped(KeyEvent e) {} // Se abre el listener para poder escuchar input del teclado en el juego.
+
+			    public void keyPressed(KeyEvent e) {
+			        int teclaPresionada = e.getKeyCode();
+			        
+			        if (teclaPresionada == KeyEvent.VK_A) { aPressed = true; }      // Actualiza los booleanos de las teclas cuando están presionadas.
+			        if (teclaPresionada == KeyEvent.VK_D) { dPressed = true; }
+			        if (teclaPresionada == KeyEvent.VK_W) { wPressed = true; }
+
+			        if (aPressed) { player.moverIzquierda(); }
+			        if (dPressed) { player.moverDerecha(contentPane.getWidth()); }
+			        if (wPressed) { player.Disparar(contentPane); }
+			    }
+
+			    @Override
+			    public void keyReleased(KeyEvent e) {
+			        int teclaPresionada = e.getKeyCode();
+			        if (teclaPresionada == KeyEvent.VK_A) { aPressed = false; }     // Actualiza los booleanos cuando una tecla es soltada.
+			        if (teclaPresionada == KeyEvent.VK_D) { dPressed = false; }
+			        if (teclaPresionada == KeyEvent.VK_W) { wPressed = false; }
+			    }
+				});
+			
+		}
+		
 	
-	public void generarEnemigos() {
-	    int filas = 3;        // cantidad de filas de enemigos
-	    int columnas = 5;    // cantidad de columnas
-	    int inicioX = 50;     // punto inicial en X
-	    int inicioY = 50;     // punto inicial en Y
-	    int espaciadoX = 60;  // separación horizontal
-	    int espaciadoY = 50;  // separación vertical
+		    public void generarEnemigos() {
+			    int filas = 3;        // cantidad de filas de enemigos
+			    int columnas = 5;    // cantidad de columnas
+			    int inicioX = 50;     // punto inicial en X
+			    int inicioY = 50;     // punto inicial en Y
+			    int espaciadoX = 60;  // separación horizontal
+			    int espaciadoY = 50;  // separación vertical
 
-	    enemigos.clear(); // limpiar por si reiniciamos el juego
+			    enemigos.clear(); // limpiar por si reiniciamos el juego
 
-	    ImageIcon nave_enemiga = new ImageIcon("src/GUI/alien2.png");
+			    ImageIcon nave_enemiga = new ImageIcon("src/GUI/alien2.png");
 
-	    int delay = (filas * columnas) * 1000 ; // para que los enemigos arranquen con un desfase
-	    
-	    for (int fila = 0; fila < filas; fila++) {
+			    int delay = (filas * columnas) * 1000 ; // para que los enemigos arranquen con un desfase
+			    
+			    for (int fila = 0; fila < filas; fila++) {
 
-	        for (int col = 0; col < columnas; col++) {
-	            int x = inicioX + col * espaciadoX;
-	            int y = inicioY + fila * espaciadoY;
+			        for (int col = 0; col < columnas; col++) {
+			            int x = inicioX + col * espaciadoX;
+			            int y = inicioY + fila * espaciadoY;
 
-	            // ahora cada enemigo tiene icono
-	            Enemigo enemigo = new Enemigo(x, y, 45, 35, nave_enemiga);
+			            // ahora cada enemigo tiene icono
+			            Enemigo enemigo = new Enemigo(x, y, 45, 35, nave_enemiga);
 
-	            contentPane.add(enemigo);   // 👈 agregar al panel
-	            enemigos.add(enemigo);      // guardarlo en la lista
-	            Enemigo.enemigos.add(enemigo); // para que se muevan en bloque
+			            contentPane.add(enemigo);   // 👈 agregar al panel
+			            enemigos.add(enemigo);      // guardarlo en la lista
+			            Enemigo.enemigos.add(enemigo); // para que se muevan en bloque
 
-	            enemigo.repaint();
-	            enemigo.movimiento(45, 35, contentPane.getWidth(), delay);
+			            enemigo.repaint();
+			            enemigo.movimiento(45, 35, contentPane.getWidth(), delay);
 
-	            delay -= 500; // el próximo enemigo arranca después
-	        }
-	    }
+			            delay -= 500; // el próximo enemigo arranca después
+			        }
+			    }
 	    
 	    
 
@@ -127,8 +142,9 @@ public class spaceInvaders extends JFrame {
 	    void onPlayerEliminado(Player player);
 	}
 
-	
-	
-
-
+	public void llamarGameOver() {
+		this.dispose();
+		gameOverPantalla gameOverPantalla = new gameOverPantalla(); // Se crea una nueva instancia de la clase spaceInvaders.
+        gameOverPantalla.setVisible(true);
+	}
 }

@@ -1,13 +1,14 @@
-import GUI.spaceInvaders;
-public class ClasePrimaria {
-
-	public static void main(String[] args) {
-		mostrarSpaceInvaders();
-	}
+import GUI.menuInicio;
 	
-	public static void mostrarSpaceInvaders() {
-		spaceInvaders spaceInv = new spaceInvaders();
-		spaceInv.setVisible(true);
+	public class ClasePrimaria {
+	
+		public static void main(String[] args) {
+			mostrarMenuInicio();
+		}
+		
+		public static void mostrarMenuInicio() {
+			menuInicio menuInicio = new menuInicio();
+			menuInicio.setVisible(true);
+		}
+	
 	}
-
-}
