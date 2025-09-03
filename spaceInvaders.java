@@ -35,6 +35,8 @@ public class spaceInvaders extends JFrame {
         setContentPane(contentPane);
         
         // Configurar puntaje en pantalla
+        Puntaje puntaje = new Puntaje(3); // 3 vidas iniciales
+
         puntaje.setBounds(10, 10, 200, 30);
         contentPane.add(puntaje);
 

@@ -10,6 +10,7 @@ import java.util.Random;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.Timer;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -24,6 +25,9 @@ public class spaceInvaders extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
+	private Timer colisionTimer;
+	private Player player;
+	private Puntaje puntaje = new Puntaje(3); // 3 vidas iniciales
 
 	public spaceInvaders() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -37,6 +41,9 @@ public class spaceInvaders extends JFrame {
 		ImageIcon nave = new ImageIcon("src/GUI/nave.png");
 		
 		setContentPane(contentPane);
+
+        puntaje.setBounds(10, 10, 200, 30);
+        contentPane.add(puntaje);
 		
 		JButton btnGameOver = new JButton("btnGameOver");
 		
@@ -49,9 +56,7 @@ public class spaceInvaders extends JFrame {
 			btnGameOver.setBounds(187, 243, 169, 23);
 			contentPane.add(btnGameOver);
 		
-		
-		
-			Player player = new Player (nave);
+			player = new Player (nave);
 			player.setBounds(360, 480, 64, 64);
 			player.setBackground(Color.GREEN);
 			contentPane.add(player);
@@ -65,6 +70,9 @@ public class spaceInvaders extends JFrame {
 			});
 		
 			generarEnemigos();
+			
+			colisionTimer = new Timer(50, e -> chequearColisiones());
+	        colisionTimer.start();
 			
 			addKeyListener(new KeyListener() {
 				
@@ -94,53 +102,84 @@ public class spaceInvaders extends JFrame {
 		}
 		
 	
-		    public void generarEnemigos() {
-			    int filas = 3;        // cantidad de filas de enemigos
-			    int columnas = 5;    // cantidad de columnas
-			    int inicioX = 50;     // punto inicial en X
-			    int inicioY = 50;     // punto inicial en Y
-			    int espaciadoX = 60;  // separación horizontal
-			    int espaciadoY = 50;  // separación vertical
+	public void generarEnemigos() {
+        int filas = 3;        // cantidad de filas de enemigos
+        int columnas = 5;    // cantidad de columnas
+        int inicioX = 50;     // punto inicial en X
+        int inicioY = 50;     // punto inicial en Y
+        int espaciadoX = 60;  // separación horizontal
+        int espaciadoY = 50;  // separación vertical
 
-			    enemigos.clear(); // limpiar por si reiniciamos el juego
+        enemigos.clear(); // limpiar por si reiniciamos el juego
 
-			    ImageIcon nave_enemiga = new ImageIcon("src/GUI/alien2.png");
+        ImageIcon nave_enemiga = new ImageIcon("src/GUI/alien2.png");
 
-			    int delay = (filas * columnas) * 1000 ; // para que los enemigos arranquen con un desfase
-			    
-			    for (int fila = 0; fila < filas; fila++) {
+        int delay = (filas * columnas) * 1000 ; // para que los enemigos arranquen con un desfase
+        
+        for (int fila = 0; fila < filas; fila++) {
 
-			        for (int col = 0; col < columnas; col++) {
-			            int x = inicioX + col * espaciadoX;
-			            int y = inicioY + fila * espaciadoY;
+            for (int col = 0; col < columnas; col++) {
+                int x = inicioX + col * espaciadoX;
+                int y = inicioY + fila * espaciadoY;
 
-			            // ahora cada enemigo tiene icono
-			            Enemigo enemigo = new Enemigo(x, y, 45, 35, nave_enemiga);
+                // ahora cada enemigo tiene icono
+                Enemigo enemigo = new Enemigo(x, y, 45, 35, nave_enemiga);
 
-			            contentPane.add(enemigo);   // 👈 agregar al panel
-			            enemigos.add(enemigo);      // guardarlo en la lista
-			            Enemigo.enemigos.add(enemigo); // para que se muevan en bloque
+                contentPane.add(enemigo);   //  agregar al panel
+                enemigos.add(enemigo);      // guardarlo en la lista
+                Enemigo.enemigos.add(enemigo); // para que se muevan en bloque
 
-			            enemigo.repaint();
-			            enemigo.movimiento(45, 35, contentPane.getWidth(), delay);
+                enemigo.repaint();
+                enemigo.movimiento(45, 35, contentPane.getWidth(), delay);
 
-			            delay -= 500; // el próximo enemigo arranca después
-			        }
-			    }
-	    
-	    
+                delay -= 500; // el próximo enemigo arranca después
+            }
+        }
+        
+        contentPane.repaint();
+    }
+		    
+		    
+		    private void chequearColisiones() {      
+		        for (int i = 0; i < enemigos.size(); i++) {
+		            Enemigo enemigo = enemigos.get(i);
+		            if (enemigo.isVisible() && colisiona(player, enemigo)) {
+		                puntaje.perderVida();
+		                enemigo.setVisible(false);
+		                contentPane.remove(enemigo);
+		                enemigos.remove(i);
+		                i--;
+		                
+		                contentPane.repaint();
 
-	    contentPane.repaint();
-	}
+		                if (puntaje.getVidas() == 0) {
+		                    eliminarPlayer(player);
+		                    colisionTimer.stop();
+		                }
+		                break;
+		            }
+		        }
+		    }
+
+		    private boolean colisiona(Player p, Enemigo e) {
+		        return p.getX() < e.getX() + e.getWidth() &&
+		               p.getX() + p.getWidth() > e.getX() &&
+		               p.getY() < e.getY() + e.getHeight() &&
+		               p.getY() + p.getHeight() > e.getY();
+		    }
+		    
+		    
+		    public interface PlayerListener {
+		        void onPlayerEliminado(Player player);
+		    }	    
+		    
 	
 	public void eliminarPlayer(Player player) {
+		llamarGameOver();
 		contentPane.remove(player);
 		contentPane.repaint();
 	}
 	
-	public interface PlayerListener {
-	    void onPlayerEliminado(Player player);
-	}
 
 	public void llamarGameOver() {
 		this.dispose();
