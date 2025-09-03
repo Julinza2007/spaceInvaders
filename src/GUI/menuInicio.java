@@ -48,7 +48,7 @@ public class menuInicio extends JFrame implements KeyListener {
 		
 			try {
 				AudioInputStream audioIn = AudioSystem.getAudioInputStream(
-						getClass().getResource("/sonidos/empezarJuego1.wav"));
+						getClass().getResource("/sonidos/empezarJuego.wav"));
 				sonidoInicio = AudioSystem.getClip();  // crear Clip
 				sonidoInicio.open(audioIn);             // abrir audio
 			}
