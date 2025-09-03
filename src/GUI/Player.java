@@ -19,7 +19,7 @@ public class Player extends JPanel {
 	private static final long serialVersionUID = 1L;
 	
 	private long ultimoDisparo = 0; // Momento en milisegundos del último disparo
-	private int tiempoRecarga = 500; // Tiempo mínimo entre disparos (ms)
+	private int tiempoRecarga = 300; // Tiempo mínimo entre disparos (ms)
 	private ImageIcon naveIcon;
 	private PlayerListener listener;
     private ArrayList<Disparo> disparos = new ArrayList<>();
@@ -158,7 +158,6 @@ public class Player extends JPanel {
 		}
 		
 	}
-	
 	public void limpiarBalas(JPanel panel) {
 	    for (Disparo disparo : disparos) {
 	        if (disparo.isVisible()) {
@@ -167,5 +166,5 @@ public class Player extends JPanel {
 	    }
 	    disparos.clear();
 	    panel.repaint();
-	}
+}
 }
