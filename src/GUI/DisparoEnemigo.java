@@ -12,6 +12,7 @@ public class DisparoEnemigo extends JPanel{
 	public DisparoEnemigo(int posX, int posY, int ancho, int alto) {
 		setBounds(posX, posY, ancho, alto);
 		setBackground(Color.GREEN);
+		setOpaque(true);
 	}
 	
 	

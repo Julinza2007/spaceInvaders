@@ -1,5 +1,6 @@
 package GUI;
 
+import java.awt.Color;
 import java.awt.Container;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,8 @@ public class Disparo extends JPanel {
 		setBounds(posX, posY, ancho, alto);
 		this.panel = panel;
 		this.enemigos = enemigos;
+		setOpaque(true);
+		setBackground(Color.RED);
 	}
 	
 	int dy = 10;

@@ -3,6 +3,8 @@ package GUI;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
@@ -11,6 +13,7 @@ import java.util.Random;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 import javax.swing.JButton;
@@ -30,15 +33,34 @@ public class spaceInvaders extends JFrame {
 	private Timer colisionTimer;
 	private Player player;
 	private Puntaje puntaje = new Puntaje(3); // 3 vidas iniciales
+	private Image fondoJuego;
 
 	public spaceInvaders() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(0, 0, 800, 600);
 		setTitle("Space Invaders");
 		contentPane = new JPanel(null);
+		
 		setResizable(false);
 		setFocusable(true); // Es importante agregar esto para hacer focus en la ventana del juego
 		requestFocusInWindow(); // El teclado hace focus solamente en la ventana del juego.
+		/*
+		ImageIcon fondoIcon = new ImageIcon(getClass().getResource("/img/fondo_juego.jpeg"));
+		JLabel fondoLabel = new JLabel(fondoIcon);
+		fondoLabel.setBounds(0, 0, 800, 600); // Ajusta al tamaño de la ventana
+		contentPane.add(fondoLabel);
+		contentPane.setComponentZOrder(fondoLabel, contentPane.getComponentCount() - 1); // Lo manda al fondo
+		*/
+		
+		
+		Image fondoJuego = new ImageIcon(getClass().getResource("/img/fondo_juego.jpeg")).getImage();
+		contentPane = new FondoPanel(fondoJuego);
+		setContentPane(contentPane);
+
+
+
+		
+		
 
 		ImageIcon nave = new ImageIcon("src/img/nave.png");
 		
@@ -70,6 +92,7 @@ public class spaceInvaders extends JFrame {
 					System.out.println("¡Jugador eliminado!");
 				}
 			});
+			
 		
 			generarEnemigos();
 			
@@ -102,6 +125,7 @@ public class spaceInvaders extends JFrame {
 				});
 			
 		}
+	
 		
 	
 	public void generarEnemigos() {
@@ -184,6 +208,7 @@ public class spaceInvaders extends JFrame {
                 delay -= 500; // el próximo enemigo arranca después
             }
         }
+        
         
         contentPane.repaint();
     }

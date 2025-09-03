@@ -2,6 +2,7 @@
 package GUI;
 
 import javax.swing.JLabel;
+import java.awt.Color;
 
 public class Puntaje extends JLabel {
     private int vidas;
@@ -11,6 +12,7 @@ public class Puntaje extends JLabel {
         this.vidas = vidasIniciales;
         this.puntos = 0;
         actualizarTexto();
+        setForeground(Color.WHITE);
     }
 
     private void actualizarTexto() {
