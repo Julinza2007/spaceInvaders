@@ -31,12 +31,8 @@ public class spaceInvaders extends JFrame {
 		requestFocusInWindow(); // El teclado hace focus solamente en la ventana del juego.
 		
 		
-		
-
 		ImageIcon nave = new ImageIcon("src/GUI/nave.png");
 		
-//		ImageIcon nave_enemiga = new ImageIcon("src/GUI/nave_enemiga.jpg");
-//		ImageIcon nave_enemiga = new ImageIcon("src/GUI/alien2.png");
 		
 		setContentPane(contentPane);
 		
@@ -55,22 +51,6 @@ public class spaceInvaders extends JFrame {
 		});
 		
 		generarEnemigos();
-		
-//		int delay = 0;
-		
-//		for (int parte : panel_partes) {
-//			Enemigo enemigo = new Enemigo (nave_enemiga);
-//			enemigo.setBounds(parte, 50, 45, 35);
-//			enemigo.setLocation(parte, 50);
-//			contentPane.add(enemigo);
-//			enemigo.repaint();
-//			System.out.println(nave_enemiga.getImage());
-//			delay += 200; // aumenta el delay entre enemigos en 200
-//			enemigo.movimiento(83, 73, contentPane.getWidth(), delay);
-//			Enemigo.enemigos.add(enemigo);
-//		}
-		
-
 		
 		addKeyListener(new KeyListener() {
 			
