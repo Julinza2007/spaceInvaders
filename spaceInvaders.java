@@ -120,6 +120,25 @@ public class spaceInvaders extends JFrame {
         contentPane.repaint();
     }
     
+    public void reiniciarNivel() {
+    	colisionTimer.stop();
+    	for (Enemigo enemigo : enemigos) {
+            contentPane.remove(enemigo);
+        }
+        enemigos.clear();
+        Enemigo.enemigos.clear();
+        
+        player.limpiarBalas(contentPane);
+        
+        // Reposicionar al jugador en la posición inicial
+        player.setLocation(360, 480);
+        player.setVisible(true);
+        
+        generarEnemigos();
+        
+        colisionTimer.start();
+    }
+    
     public void eliminarPlayer(Player player) {
         contentPane.remove(player);
         contentPane.repaint();
@@ -134,6 +153,7 @@ public class spaceInvaders extends JFrame {
                 contentPane.remove(enemigo);
                 enemigos.remove(i);
                 i--;
+                reiniciarNivel();
                 
                 contentPane.repaint();
 
@@ -153,6 +173,9 @@ public class spaceInvaders extends JFrame {
                p.getY() + p.getHeight() > e.getY();
     }
     
+    public void sumarPuntos() {
+        puntaje.sumarPuntos(100); // Sumar 100 puntos por enemigo destruido
+    }
     
     public interface PlayerListener {
         void onPlayerEliminado(Player player);
