@@ -22,6 +22,8 @@ public class Player extends JPanel {
 	private int tiempoRecarga = 300; // Tiempo mínimo entre disparos (ms)
 	private ImageIcon naveIcon;
 	private PlayerListener listener;
+    private ArrayList<Disparo> disparos = new ArrayList<>();
+
 	
 	public Player(int posX, int posY, int ancho, int alto) {
 		setBounds(posX, posY, ancho, alto);
@@ -82,8 +84,10 @@ public class Player extends JPanel {
 	
 	
 	
-	
 	public void Disparar(JPanel panel) {
+		if(!isVisible()) {
+			return; // Si el jugador no está visible, no puede disparar
+		}
 		long ahora = System.currentTimeMillis();
 		if (ahora - ultimoDisparo < tiempoRecarga) {
 		    return; // Todavía no pasó el tiempo de recarga
@@ -97,7 +101,8 @@ public class Player extends JPanel {
 			Disparo disparo = new Disparo (disparoX, disparoY, 5, 25, panel, spaceInvaders.enemigos);
 			disparo.setBackground(Color.RED);
 			panel.add(disparo);
-		
+			disparos.add(disparo); // se agrega el disparo a la lista
+			
 		
 			// Timer para mover el disparo hacia arriba
 			Timer timer = new Timer(30, new ActionListener() {
@@ -108,11 +113,14 @@ public class Player extends JPanel {
 						
 						
 						ArrayList<Enemigo> colisionados = disparo.detectarColisiones(spaceInvaders.enemigos);
+
 						if (!colisionados.isEmpty()) {
 			                // Eliminar solo el primer enemigo colisionado
 			                Enemigo enemigo = colisionados.get(0);
 			                panel.remove(enemigo);
 			                spaceInvaders.enemigos.remove(enemigo);
+			                
+			                spaceInvaders.getInstance().sumarPuntos();
 
 			                // Eliminar el disparo y detener el timer
 			                ((Timer) e.getSource()).stop();
@@ -125,7 +133,9 @@ public class Player extends JPanel {
 						
 						
 						spaceInvaders.enemigos.removeAll(colisionados);
+
 						panel.repaint();
+						
 						
 						ArrayList<Enemigo> choquePlayer = detectarChoques(spaceInvaders.enemigos);
 						if (!choquePlayer.isEmpty() && listener != null) {
@@ -144,11 +154,22 @@ public class Player extends JPanel {
 					else {
 						((Timer) e.getSource()).stop(); // Detiene el timer
 						panel.remove(disparo);          // Elimina el disparo del panel
-						panel.repaint();
+					    disparos.remove(disparo);  // Se elimina el disparo del array cuando llega al tope
+					    panel.repaint();
 					}
 				}
 			});
 			timer.start();
 		}
+		
 	}
+	public void limpiarBalas(JPanel panel) {
+	    for (Disparo disparo : disparos) {
+	        if (disparo.isVisible()) {
+	            panel.remove(disparo);
+	        }
+	    }
+	    disparos.clear();
+	    panel.repaint();
+}
 }

@@ -54,7 +54,7 @@ public class Enemigo extends JPanel {
 		
 	  
 	
-	public void movimiento(int ancho, int alto, int ancho_panel, int delay) {
+	public void movimiento(int ancho, int alto, int ancho_panel) {
 
 		
 		new Thread(() -> {	// Es un hilo, basicamente una ejecución paralela que corre junto al programa.
@@ -72,7 +72,7 @@ public class Enemigo extends JPanel {
 			
 			
 			try {
-	            Thread.sleep(delay); // cada enemigo espera distinto tiempo antes de empezar, va aumentando en 200 entre cada enemigo
+	            Thread.sleep(0); // cada enemigo espera distinto tiempo antes de empezar, va aumentando en 200 entre cada enemigo
 	        } catch (InterruptedException e) {
 	            Thread.currentThread().interrupt();
 	        }
@@ -99,7 +99,7 @@ public class Enemigo extends JPanel {
 		    	}
 		    	
 		    	int maxima_altura = ancho_panel / 2;
-		    	
+
 		    	if (tipo == 2 && !disparando && getY() <= 300) {
 		    	    disparando = true;
 		    	    new Timer(2000, e -> disparar()).start();
@@ -141,8 +141,6 @@ public class Enemigo extends JPanel {
 				    	posX += (hacia_derecha ? dx : -dx);	 // si la variable es TRUE utiliza dx. Si la variable es FALSE utiliza -dx 
 
 		    	    }
-		    	 
-
 
 		    	
 		    	
@@ -151,6 +149,7 @@ public class Enemigo extends JPanel {
 	            repaint(); // fuerza el redibujado
 		    	
 		        try {
+
 
 		            Thread.sleep(200); // Suspende el hilo por 30 ms, esta es la pausa entre cada iteración del bucle.
 
