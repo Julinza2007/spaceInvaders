@@ -86,10 +86,7 @@ public class Enemigo extends JPanel {
 		    	int posX = getX();
 		    	int posY = getY();
 		    	
-		    	
-		    	
-		    	
-		    	
+
 		    	// Verificar si el enemigo salió del panel
 		    	if (posX < -getWidth() || posX > panel.getWidth() ||
 		    	    posY < -getHeight() || posY > panel.getHeight()) {
@@ -152,7 +149,6 @@ public class Enemigo extends JPanel {
 		    	// Aplica la nueva posición
 	            setLocation(posX, posY);
 	            repaint(); // fuerza el redibujado
-		    	
 		    	
 		        try {
 

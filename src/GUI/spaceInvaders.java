@@ -44,23 +44,12 @@ public class spaceInvaders extends JFrame {
 		setResizable(false);
 		setFocusable(true); // Es importante agregar esto para hacer focus en la ventana del juego
 		requestFocusInWindow(); // El teclado hace focus solamente en la ventana del juego.
-		/*
-		ImageIcon fondoIcon = new ImageIcon(getClass().getResource("/img/fondo_juego.jpeg"));
-		JLabel fondoLabel = new JLabel(fondoIcon);
-		fondoLabel.setBounds(0, 0, 800, 600); // Ajusta al tamaño de la ventana
-		contentPane.add(fondoLabel);
-		contentPane.setComponentZOrder(fondoLabel, contentPane.getComponentCount() - 1); // Lo manda al fondo
-		*/
-		
+			
 		
 		Image fondoJuego = new ImageIcon(getClass().getResource("/img/fondo_juego.jpeg")).getImage();
 		contentPane = new FondoPanel(fondoJuego);
 		setContentPane(contentPane);
 
-
-
-		
-		
 
 		ImageIcon nave = new ImageIcon("src/img/nave.png");
 		
@@ -163,8 +152,6 @@ public class spaceInvaders extends JFrame {
 
 
                     
-                    
-                    
                     enemigo.repaint();
                     enemigo.movimiento(45, 35, contentPane.getWidth(), delay);
                 }
@@ -178,8 +165,6 @@ public class spaceInvaders extends JFrame {
 
 
                     
-                    
-                    
                     enemigo.repaint();
                     enemigo.movimiento(45, 35, contentPane.getWidth(), delay);
                 }
@@ -191,8 +176,6 @@ public class spaceInvaders extends JFrame {
                     enemigos.add(enemigo);      // guardarlo en la lista
                     Enemigo.enemigos.add(enemigo); // para que se muevan en bloque
 
-
-                    
                     
                     
                     enemigo.repaint();
@@ -286,96 +269,3 @@ public class spaceInvaders extends JFrame {
 
 	}
 }
-/*
-=======
-package GUI;
-
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.Timer;
-
-public class spaceInvaders extends JFrame {
-
-    static List<Enemigo> enemigos = new ArrayList<>();
-    private Puntaje puntaje = new Puntaje(3); // 3 vidas iniciales
-    private Player player;
-    private boolean aPressed = false;
-    private boolean dPressed = false;
-    private boolean wPressed = false;
-    private static final long serialVersionUID = 1L;
-    private JPanel contentPane;
-    private Timer colisionTimer;
-
-    public spaceInvaders() {
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 800, 600);
-        contentPane = new JPanel(null);
-        setResizable(false);
-        setFocusable(true); // Es importante agregar esto para hacer focus en la ventana del juego
-        requestFocusInWindow(); // El teclado hace focus solamente en la ventana del juego.
-
-        ImageIcon nave = new ImageIcon("src/GUI/nave.png");
-        setContentPane(contentPane);
-        
-        // Configurar puntaje en pantalla
-        puntaje.setBounds(10, 10, 200, 30);
-        contentPane.add(puntaje);
-
-        player = new Player(nave);
-        player.setBounds(360, 480, 64, 64);
-        player.setBackground(Color.GREEN);
-        contentPane.add(player);
-
-        player.setPlayerListener(new PlayerListener() {
-            @Override
-            public void onPlayerEliminado(Player eliminado) {
-                eliminarPlayer(eliminado);
-                System.out.println("¡Jugador eliminado!");
-            }
-        });
-
-        generarEnemigos();
-        
-        // Timer para verificar colisiones continuamente
-        colisionTimer = new Timer(50, e -> chequearColisiones());
-        colisionTimer.start();
-
-        addKeyListener(new KeyListener() {
-            
-            public void keyTyped(KeyEvent e) {} // Se abre el listener para poder escuchar input del teclado en el juego.
-
-            public void keyPressed(KeyEvent e) {
-                int teclaPresionada = e.getKeyCode();
-                
-                if (teclaPresionada == KeyEvent.VK_A) { aPressed = true; }      // Actualiza los booleanos de las teclas cuando están presionadas.
-                if (teclaPresionada == KeyEvent.VK_D) { dPressed = true; }
-                if (teclaPresionada == KeyEvent.VK_W) { wPressed = true; }
-
-                if (aPressed) { player.moverIzquierda(); }
-                if (dPressed) { player.moverDerecha(contentPane.getWidth()); }
-                if (wPressed) { player.Disparar(contentPane); }
-            }
-
-            @Override
-            public void keyReleased(KeyEvent e) {
-                int teclaPresionada = e.getKeyCode();
-                if (teclaPresionada == KeyEvent.VK_A) { aPressed = false; }     // Actualiza los booleanos cuando una tecla es soltada.
-                if (teclaPresionada == KeyEvent.VK_D) { dPressed = false; }
-                if (teclaPresionada == KeyEvent.VK_W) { wPressed = false; }
-            }
-        });
-    }
-    
-    */
-    
-   
-
-
