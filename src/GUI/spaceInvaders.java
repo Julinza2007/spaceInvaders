@@ -1,9 +1,7 @@
-
 package GUI;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -12,15 +10,14 @@ import java.util.List;
 import java.util.Random;
 
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.Timer;
-import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class spaceInvaders extends JFrame {
+
 
 	private static final long serialVersionUID = 1L;
 
@@ -34,6 +31,8 @@ private JPanel contentPane;
 private Timer colisionTimer;
 private boolean gameOverMostrado = false;
 private static spaceInvaders instance;
+private int nivel = 1; // nivel actual
+private JLabel nivelLabel; // etiqueta para mostrar nivel en pantalla
 	private Image fondoJuego;
 
 	public spaceInvaders() {
@@ -54,13 +53,23 @@ private static spaceInvaders instance;
 
 
         ImageIcon nave = new ImageIcon("src/img/nave.png"); // 👈 ojo acá, revisá si es "GUI" o "img"
+
         setContentPane(contentPane);
 
-        // Configurar puntaje en pantalla
+
+        // puntaje 
         puntaje.setBounds(10, 10, 200, 30);
         contentPane.add(puntaje);
+
+
+        // Nivel
+        nivelLabel = new JLabel("Nivel: " + nivel);
+        nivelLabel.setBounds(700, 10, 100, 30);
+        contentPane.add(nivelLabel);
+
         
 
+        // Player
         player = new Player(nave);
         player.setBounds(360, 480, 64, 64);
         player.setBackground(Color.GREEN);
@@ -70,12 +79,13 @@ private static spaceInvaders instance;
             contentPane.setComponentZOrder(player, 1);
         }
 
+
         player.setPlayerListener(eliminado -> {
             eliminarPlayer(eliminado);
             System.out.println("¡Jugador eliminado!");
         });
 
-        generarEnemigos();
+        generarEnemigos(nivel);
         
 
         colisionTimer = new Timer(50, e -> chequearColisiones());
@@ -103,17 +113,15 @@ private static spaceInvaders instance;
 
 		}
 	
-		
-	
-	
 
     public static spaceInvaders getInstance() {
         return instance;
     }
 
-    public void generarEnemigos() {
-        int filas = 3;
-        int columnas = 5;
+    // generamos enemigos segun el nivel 
+    public void generarEnemigos(int nivel) {
+        int filas = 3 + (nivel - 1);
+        int columnas = 5 + (nivel - 1);
         int inicioX = 50;
         int inicioY = 50;
         int espaciadoX = 60;
@@ -125,21 +133,18 @@ private static spaceInvaders instance;
         ImageIcon nave_kamikaze = new ImageIcon("src/img/nave_kamikaze.png");
         ImageIcon nave_disparadora = new ImageIcon("src/img/ship2.png");
 
-//        int delay = (filas * columnas) * 1000; // 👈 delay progresivo
-
-//        int delay = 0;
-        
         for (int fila = 0; fila < filas; fila++) {
             for (int col = 0; col < columnas; col++) {
                 int x = inicioX + col * espaciadoX;
                 int y = inicioY + fila * espaciadoY;
-                
-                Random random = new Random(); 
-                
-                int tipo = random.nextInt(3) + 1; // Se genera un numero de 1 a 3. 
-                
-                // 1 Es el kamikaze
+
+                Random random = new Random();
+                int tipo = random.nextInt(3) + 1;
+
+                Enemigo enemigo = null;
                 if (tipo == 1) {
+                	/*
+<<<<<<< HEAD
                 	Enemigo enemigo = new Enemigo(x, y, 45, 35, nave_kamikaze, tipo, player, contentPane);
                 	contentPane.add(enemigo);   //  agregar al panel
                     enemigos.add(enemigo);      // guardarlo en la lista
@@ -150,169 +155,40 @@ private static spaceInvaders instance;
                     enemigo.repaint();
                     enemigo.movimiento(45, 35, contentPane.getWidth());
                     contentPane.setComponentZOrder(enemigo, 2);
-                }
-                
-                // 2 Es el disparador
-                if (tipo == 2) {
-                	Enemigo enemigo = new Enemigo(x, y, 45, 35, nave_disparadora, tipo, player, contentPane);
-                	contentPane.add(enemigo);   //  agregar al panel
-                    enemigos.add(enemigo);      // guardarlo en la lista
-                    Enemigo.enemigos.add(enemigo); // para que se muevan en bloque
-
-
-                    
-                    enemigo.repaint();
-                    enemigo.movimiento(45, 35, contentPane.getWidth());
-                    contentPane.setComponentZOrder(enemigo, 2);
-                }
-                
-                // 3 Es el normal
-                if (tipo == 3) {
-                	Enemigo enemigo = new Enemigo(x, y, 45, 35, nave_enemiga, tipo, player, contentPane);
-                	contentPane.add(enemigo);   //  agregar al panel
-                    enemigos.add(enemigo);      // guardarlo en la lista
-                    Enemigo.enemigos.add(enemigo); // para que se muevan en bloque
-
-                    
-                    
-                    enemigo.repaint();
-                    enemigo.movimiento(45, 35, contentPane.getWidth());
-                    contentPane.setComponentZOrder(enemigo, 2);
-                }
-                
-                
-                // ahora cada enemigo tiene icono
-
-
-                
- /*               
 =======
-                Enemigo enemigo = new Enemigo(x, y, 45, 35, nave_enemiga);
+*/
+                    enemigo = new Enemigo(x, y, 45, 35, nave_kamikaze, tipo, player, contentPane);
+                } else if (tipo == 2) {
+                    enemigo = new Enemigo(x, y, 45, 35, nave_disparadora, tipo, player, contentPane);
+                } else {
+                    enemigo = new Enemigo(x, y, 45, 35, nave_enemiga, tipo, player, contentPane);
+                }
                 contentPane.add(enemigo);
                 contentPane.setComponentZOrder(enemigo, 2);
                 enemigos.add(enemigo);
                 Enemigo.enemigos.add(enemigo);
 
                 enemigo.repaint();
-                enemigo.movimiento(45, 35, contentPane.getWidth(), 1500);
->>>>>>> f7e525db78c75ddfca4662670058e3032b62151d
-*/
+                
+                // aumentamos la velocidad por cada nivel
+                int velocidad = Math.max(200, 1500 - (nivel * 100));
+                enemigo.movimiento(45, 35, contentPane.getWidth(), velocidad);
+                contentPane.setComponentZOrder(enemigo, 2);
             }
         }
-
-        
-        
+     // esto actualiza el texto para ver en que nivel estas
+        nivelLabel.setText("Nivel: " + nivel);
         contentPane.repaint();
     }
-		    
-		    
-		    
+
+  
+        
 
 		    public void eliminarPlayer(Player player) {
 		        contentPane.remove(player);
 		        contentPane.repaint();
 		    }
 		    
-		    private void chequearColisiones() {      
-		        for (int i = 0; i < enemigos.size(); i++) {
-		            Enemigo enemigo = enemigos.get(i);
-		            if (enemigo.isVisible() && colisiona(player, enemigo)) {
-		                puntaje.perderVida();
-		                
-		                JLabel explosion = new JLabel(new ImageIcon("src/img/explosionJugador.gif"));
-		            	explosion.setBounds(player.getX(), player.getY(), player.getWidth(), player.getHeight());
-		            	contentPane.add(explosion);
-		                
-		                enemigo.setVisible(false);
-		                contentPane.remove(enemigo);
-		                enemigos.remove(i);
-		                i--;
-		                
-		                if (contentPane.isAncestorOf(explosion)) {
-		            	    contentPane.setComponentZOrder(explosion, 0);
-		            	}
-		                
-		                
-		                contentPane.repaint();
-		                
-		                Timer timerExplosion = new Timer(2000, e2 -> {
-		            	    contentPane.remove(explosion);
-		            	    contentPane.repaint();
-
-		            	    if (puntaje.getVidas() == 0 && !gameOverMostrado) {
-		            	        gameOverMostrado = true;
-		            	        colisionTimer.stop();
-		            	        llamarGameOver();
-		            	    } else {
-		            	        reiniciarNivel();
-		            	    }
-		            	});
-		            	timerExplosion.setRepeats(false);
-		            	timerExplosion.start();
-
-		              
-		                break;
-		            }
-		        }
-		        // Colisión con disparos enemigos
-		        for (Component comp : contentPane.getComponents()) {
-		            if (comp instanceof DisparoEnemigo) {
-		                DisparoEnemigo disparo = (DisparoEnemigo) comp;
-		                if (colisiona_disparo(player, disparo)) {
-		                    puntaje.perderVida();
-		                    
-		                    JLabel explosion = new JLabel(new ImageIcon("src/img/explosionJugador.gif"));
-		                	explosion.setBounds(player.getX(), player.getY(), player.getWidth(), player.getHeight());
-		                	
-		                	if (contentPane.isAncestorOf(explosion)) {
-			            	    contentPane.setComponentZOrder(explosion, 0);
-			            	}
-			                
-			                
-			                Timer timerExplosion = new Timer(2000, e2 -> {
-			            	    contentPane.remove(explosion);
-			            	    contentPane.repaint();
-
-			            	    if (puntaje.getVidas() == 0 && !gameOverMostrado) {
-			            	        gameOverMostrado = true;
-			            	        colisionTimer.stop();
-			            	        llamarGameOver();
-			            	    } else {
-			            	        reiniciarNivel();
-			            	    }
-			            	});
-			            	timerExplosion.setRepeats(false);
-			            	timerExplosion.start();
-			            	
-		                	contentPane.add(explosion);
-		                    
-		                    contentPane.remove(disparo);
-		                    contentPane.repaint();
-
-		                    if (puntaje.getVidas() == 0) {
-		                        eliminarPlayer(player);
-		                        colisionTimer.stop();
-		                        reiniciarNivel();
-		                    }
-		                    break;
-		                }
-		            }
-		        }
-		    }
-
-		    private boolean colisiona_disparo(Player p, DisparoEnemigo d) {
-		        return p.getX() < d.getX() + d.getWidth() &&
-		               p.getX() + p.getWidth() > d.getX() &&
-		               p.getY() < d.getY() + d.getHeight() &&
-		               p.getY() + p.getHeight() > d.getY();
-		    }
-		    
-		    private boolean colisiona(Player p, Enemigo e) {
-		        return p.getX() < e.getX() + e.getWidth() &&
-		               p.getX() + p.getWidth() > e.getX() &&
-		               p.getY() < e.getY() + e.getHeight() &&
-		               p.getY() + p.getHeight() > e.getY();
-		    }
 		    
 		    
 		    public interface PlayerListener {
@@ -323,7 +199,9 @@ private static spaceInvaders instance;
 
     
 
-    public void reiniciarNivel() {
+
+    // reinicia el nivel actual
+    public void reiniciarNivel(int nivel) {
         colisionTimer.stop();
         for (Component comp : contentPane.getComponents()) {
             if (comp instanceof Enemigo) {
@@ -346,17 +224,16 @@ private static spaceInvaders instance;
 
 
         if (!contentPane.isAncestorOf(player)) {
-			contentPane.add(player);
-		}
-        
-		 if (contentPane.isAncestorOf(player)) {
-			 contentPane.setComponentZOrder(player, 1);
-		 }
-        
+            contentPane.add(player);
+        }
+        if (contentPane.isAncestorOf(player)) {
+            contentPane.setComponentZOrder(player, 1);
+        }
+
         player.setLocation(360, 480);
         player.setVisible(true);
 
-        generarEnemigos();
+        generarEnemigos(nivel);
         colisionTimer.start();
     }
 
@@ -369,17 +246,103 @@ private static spaceInvaders instance;
     }
 
 
+    // Detección de colisiones
+    private void chequearColisiones() {
+        for (int i = 0; i < enemigos.size(); i++) {
+            if (contentPane.isAncestorOf(player)) {
+                contentPane.setComponentZOrder(player, 1);
+            }
+            Enemigo enemigo = enemigos.get(i);
+            if (enemigo.isVisible() && colisiona(player, enemigo)) {
+                colisionTimer.stop();
+                puntaje.perderVida();
+
+                JLabel explosion = new JLabel(new ImageIcon("src/img/explosionJugador.gif"));
+                explosion.setBounds(player.getX(), player.getY(), player.getWidth(), player.getHeight());
+                contentPane.add(explosion);
+
+                if (contentPane.isAncestorOf(explosion)) {
+                    contentPane.setComponentZOrder(explosion, 0);
+                }
+
+                contentPane.repaint();
+                player.setVisible(false);
+
+                enemigo.setVisible(false);
+                contentPane.remove(enemigo);
+                enemigos.remove(i);
+                i--;
+
+                Timer timerExplosion = new Timer(2000, e2 -> {
+                    contentPane.remove(explosion);
+                    contentPane.repaint();
+
+                    if (puntaje.getVidas() == 0 && !gameOverMostrado) {
+                        gameOverMostrado = true;
+                        colisionTimer.stop();
+                        llamarGameOver();
+                    } else {
+                        reiniciarNivel(nivel);
+                    }
+                });
+                timerExplosion.setRepeats(false);
+                timerExplosion.start();
+
+                break;
+            }
+        }
+
+        // Colisión con disparos enemigos
+        for (Component comp : contentPane.getComponents()) {
+            if (comp instanceof DisparoEnemigo) {
+                DisparoEnemigo disparo = (DisparoEnemigo) comp;
+                if (colisionaDisparo(player, disparo)) {
+                    puntaje.perderVida();
+                    contentPane.remove(disparo);
+                    contentPane.repaint();
+
+                    if (puntaje.getVidas() == 0) {
+                        eliminarPlayer(player);
+                        colisionTimer.stop();
+                        llamarGameOver();
+                    }
+                    break;
+                }
+            }
+        }
+
+        
+        if(enemigos.isEmpty()) {
+            nivel++;
+            System.out.println("Nivel superado! ahora estás en el nivel " + nivel);
+            puntaje.reiniciarVidas();
+            reiniciarNivel(nivel);
+           
+        }
+    }
+
+    // Colisiones
+    private boolean colisionaDisparo(Player p, DisparoEnemigo d) {
+        return p.getX() < d.getX() + d.getWidth() &&
+               p.getX() + p.getWidth() > d.getX() &&
+               p.getY() < d.getY() + d.getHeight() &&
+               p.getY() + p.getHeight() > d.getY();
+    }
+
+    private boolean colisiona(Player p, Enemigo e) {
+        return p.getX() < e.getX() + e.getWidth() &&
+               p.getX() + p.getWidth() > e.getX() &&
+               p.getY() < e.getY() + e.getHeight() &&
+               p.getY() + p.getHeight() > e.getY();
+    }
 
 
-    
-
-
+    // Puntaje
     public void sumarPuntos() {
         puntaje.sumarPuntos(100);
     }
 
-   
+
+    
 }
-/*
->>>>>>> f7e525db78c75ddfca4662670058e3032b62151d
-*/
+

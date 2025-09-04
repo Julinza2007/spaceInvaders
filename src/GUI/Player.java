@@ -114,6 +114,7 @@ public class Player extends JPanel {
 						
 						ArrayList<Enemigo> colisionados = disparo.detectarColisiones(spaceInvaders.enemigos);
 
+
 						if (!colisionados.isEmpty()) {
 			                // Eliminar solo el primer enemigo colisionado
 			                Enemigo enemigo = colisionados.get(0);
@@ -133,6 +134,7 @@ public class Player extends JPanel {
 						
 						
 						spaceInvaders.enemigos.removeAll(colisionados);
+
 
 						panel.repaint();
 						
