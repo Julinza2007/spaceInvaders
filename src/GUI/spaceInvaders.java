@@ -31,28 +31,33 @@ public class spaceInvaders extends JFrame {
     private Timer colisionTimer;
     private boolean gameOverMostrado = false;
     private static spaceInvaders instance;
+    
+    private int nivel = 1; // nivel actual
+    private JLabel nivelLabel; // etiqueta para mostrar nivel en pantalla
 
     public spaceInvaders() {
         instance = this;
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(0, 0, 800, 600);
         setTitle("Space Invaders");
-        contentPane = new JPanel(null);
         setResizable(false);
         setFocusable(true);
         requestFocusInWindow();
 
-        // Fondo opcional
-        // Image fondoJuego = new ImageIcon(getClass().getResource("/img/fondo_juego.jpeg")).getImage();
-        // contentPane = new FondoPanel(fondoJuego);
-
-        ImageIcon nave = new ImageIcon("src/img/nave.png");
+       
+        contentPane = new JPanel(null);
         setContentPane(contentPane);
 
-        // Puntaje
+        ImageIcon nave = new ImageIcon("src/img/nave.png");
+
+        // puntaje 
         puntaje.setBounds(10, 10, 200, 30);
         contentPane.add(puntaje);
-        contentPane.setComponentZOrder(puntaje, 0);
+
+        // Nivel
+        nivelLabel = new JLabel("Nivel: " + nivel);
+        nivelLabel.setBounds(700, 10, 100, 30);
+        contentPane.add(nivelLabel);
 
         // Botón de prueba GameOver
         JButton btnGameOver = new JButton("btnGameOver");
@@ -78,13 +83,14 @@ public class spaceInvaders extends JFrame {
             }
         });
 
-        generarEnemigos();
+        
+        generarEnemigos(nivel);
 
         // Timer de colisiones
         colisionTimer = new Timer(50, e -> chequearColisiones());
         colisionTimer.start();
 
-        // Controles
+        // aca estan los controles del jugador
         addKeyListener(new KeyListener() {
             public void keyTyped(KeyEvent e) {}
 
@@ -107,14 +113,16 @@ public class spaceInvaders extends JFrame {
             }
         });
     }
-
+    
+    
     public static spaceInvaders getInstance() {
         return instance;
     }
 
-    public void generarEnemigos() {
-        int filas = 3;
-        int columnas = 5;
+    // generamos enemigos segun el nivel 
+    public void generarEnemigos(int nivel) {
+        int filas = 3 + (nivel - 1);
+        int columnas = 5 + (nivel - 1);
         int inicioX = 50;
         int inicioY = 50;
         int espaciadoX = 60;
@@ -148,13 +156,19 @@ public class spaceInvaders extends JFrame {
                 Enemigo.enemigos.add(enemigo);
 
                 enemigo.repaint();
-                enemigo.movimiento(45, 35, contentPane.getWidth(), 1500);
+                
+                // aumentamos la velocidad por cada nivel
+                int velocidad = Math.max(200, 1500 - (nivel * 100));
+                enemigo.movimiento(45, 35, contentPane.getWidth(), velocidad);
             }
         }
+        // esto actualiza el texto para ver en que nivel estas
+        nivelLabel.setText("Nivel: " + nivel);
         contentPane.repaint();
     }
 
-    public void reiniciarNivel() {
+    // reinicia el nivel actual
+    public void reiniciarNivel(int nivel) {
         colisionTimer.stop();
         for (Enemigo enemigo : enemigos) {
             contentPane.remove(enemigo);
@@ -174,7 +188,7 @@ public class spaceInvaders extends JFrame {
         player.setLocation(360, 480);
         player.setVisible(true);
 
-        generarEnemigos();
+        generarEnemigos(nivel);
         colisionTimer.start();
     }
 
@@ -189,6 +203,7 @@ public class spaceInvaders extends JFrame {
         this.dispose();
     }
 
+    // Detección de colisiones
     private void chequearColisiones() {
         for (int i = 0; i < enemigos.size(); i++) {
             if (contentPane.isAncestorOf(player)) {
@@ -224,7 +239,7 @@ public class spaceInvaders extends JFrame {
                         colisionTimer.stop();
                         llamarGameOver();
                     } else {
-                        reiniciarNivel();
+                        reiniciarNivel(nivel);
                     }
                 });
                 timerExplosion.setRepeats(false);
@@ -252,8 +267,18 @@ public class spaceInvaders extends JFrame {
                 }
             }
         }
+
+        
+        if(enemigos.isEmpty()) {
+            nivel++;
+            System.out.println("Nivel superado! ahora estás en el nivel " + nivel);
+            puntaje.reiniciarVidas();
+            reiniciarNivel(nivel);
+           
+        }
     }
 
+    // Colisiones
     private boolean colisionaDisparo(Player p, DisparoEnemigo d) {
         return p.getX() < d.getX() + d.getWidth() &&
                p.getX() + p.getWidth() > d.getX() &&
@@ -268,10 +293,12 @@ public class spaceInvaders extends JFrame {
                p.getY() + p.getHeight() > e.getY();
     }
 
+    // Puntaje
     public void sumarPuntos() {
         puntaje.sumarPuntos(100);
     }
 
+    // Listener del Player
     public interface PlayerListener {
         void onPlayerEliminado(Player player);
     }

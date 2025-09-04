@@ -7,6 +7,7 @@ import java.awt.Color;
 public class Puntaje extends JLabel {
     private int vidas;
     private int puntos;
+    
 
     public Puntaje(int vidasIniciales) {
         this.vidas = vidasIniciales;
@@ -21,6 +22,11 @@ public class Puntaje extends JLabel {
 
     public int getVidas() {
         return vidas;
+    }
+    
+    public void reiniciarVidas() {
+    	vidas = 3;
+    	actualizarTexto();
     }
 
     public void perderVida() {
