@@ -1,3 +1,14 @@
+/* Lista de errores:
+
+1. El nivel, al completarlo, no avanza correctamente, posee retrasos a la hora de cambiarlo. Además, como error fatal sucede que en el  mismo momento de retraso de cambiar de nivelnuevos 
+se agregan enemigos random otra vez, y ni siquiera el nivel había avanzado. A lo mejor es un error de solamente que no se cambia a tiempo en la etiqueta, o quizá sea realmente un problema
+real de la estructura.
+
+2. Otra cosa es que yo programé que la nave explote por cada muerte del jugador, y no se estaría haciendo. A veces funciona, pero solo a lo último funciona (cuando al jugador se le quitan todas las vidas), pero a veces sucede.
+
+*/
+
+
 package GUI;
 
 import java.awt.Color;
@@ -10,7 +21,6 @@ import java.util.List;
 import java.util.Random;
 
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -33,9 +43,11 @@ private boolean gameOverMostrado = false;
 private static spaceInvaders instance;
 private int nivel = 1; // nivel actual
 private JLabel nivelLabel; // etiqueta para mostrar nivel en pantalla
-	private Image fondoJuego;
+private boolean jugadorInvulnerable = false;
+	
 
-	public spaceInvaders() {
+
+public spaceInvaders() {
 		instance = this;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(0, 0, 800, 600);
@@ -65,6 +77,7 @@ private JLabel nivelLabel; // etiqueta para mostrar nivel en pantalla
         // Nivel
         nivelLabel = new JLabel("Nivel: " + nivel);
         nivelLabel.setBounds(700, 10, 100, 30);
+        nivelLabel.setForeground(Color.WHITE);
         contentPane.add(nivelLabel);
 
         
@@ -253,7 +266,9 @@ private JLabel nivelLabel; // etiqueta para mostrar nivel en pantalla
                 contentPane.setComponentZOrder(player, 1);
             }
             Enemigo enemigo = enemigos.get(i);
-            if (enemigo.isVisible() && colisiona(player, enemigo)) {
+            if (/*enemigo.isVisible() && */colisiona(player, enemigo)) {
+            	
+            	System.out.println("\n\n\n\nHOLA ENTRÉ EN ESTA COLISIÓN\n\n\n\n");
                 colisionTimer.stop();
                 puntaje.perderVida();
 
@@ -293,33 +308,66 @@ private JLabel nivelLabel; // etiqueta para mostrar nivel en pantalla
         }
 
         // Colisión con disparos enemigos
+        
+        
+   if(!jugadorInvulnerable) {
+        	
+        
         for (Component comp : contentPane.getComponents()) {
             if (comp instanceof DisparoEnemigo) {
                 DisparoEnemigo disparo = (DisparoEnemigo) comp;
+                
                 if (colisionaDisparo(player, disparo)) {
                     puntaje.perderVida();
                     contentPane.remove(disparo);
-                    contentPane.repaint();
+                    JLabel explosion = new JLabel(new ImageIcon("src/img/explosionJugador.gif"));
+                    explosion.setBounds(player.getX(), player.getY(), player.getWidth(), player.getHeight());
+                    contentPane.add(explosion);
 
-                    if (puntaje.getVidas() == 0) {
-                        eliminarPlayer(player);
-                        colisionTimer.stop();
-                        llamarGameOver();
+                    if (contentPane.isAncestorOf(explosion)) {
+                        contentPane.setComponentZOrder(explosion, 0);
                     }
+
+                    contentPane.repaint();
+                    player.setVisible(false);
+
+                    
+                    jugadorInvulnerable = true;
+                    
+                    Timer timerExplosion = new Timer(2000, e2 -> {
+                        contentPane.remove(explosion);
+                        contentPane.repaint();
+                        jugadorInvulnerable = false;
+
+                        if (puntaje.getVidas() == 0 && !gameOverMostrado) {
+                            gameOverMostrado = true;
+                            colisionTimer.stop();
+                            llamarGameOver();
+                        } else {
+                            reiniciarNivel(nivel);
+                        }
+                    });
+                    timerExplosion.setRepeats(false);
+                    timerExplosion.start();
+
                     break;
                 }
             }
         }
+        
+   }
 
         
         if(enemigos.isEmpty()) {
             nivel++;
             System.out.println("Nivel superado! ahora estás en el nivel " + nivel);
             puntaje.reiniciarVidas();
-            reiniciarNivel(nivel);
+            
+            Timer delayNivel = new Timer(1000, e3 -> reiniciarNivel(nivel));
+            delayNivel.start();
+        }            
            
         }
-    }
 
     // Colisiones
     private boolean colisionaDisparo(Player p, DisparoEnemigo d) {
